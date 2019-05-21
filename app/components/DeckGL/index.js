@@ -76,41 +76,28 @@ class DeckGlWrapper extends React.Component {
 
 	_animate() {
 		const {
-		  loopLength = 1800, // unit corresponds to the timestamp in source data
-		  animationSpeed = 120 // unit time per second
+		  loopLength = 90820, // unit corresponds to the timestamp in source data
+		  animationSpeed = 250 // unit time per second
 		} = this.props;
 		const timestamp = Date.now() / 1000;
 		const loopTime = loopLength / animationSpeed;
 	
 		this.setState({
 			time: ((timestamp % loopTime) / loopTime) * loopLength
-		});
+        });
+        
+        console.log(this.state.time);
 
 		this._animationFrame = window.requestAnimationFrame(this._animate.bind(this));
 	}
 
 	_renderLayers() {
 		return [
-			new GeoJsonLayer({
-				id: 'airports',
-				// data: AIR_PORTS,
-				// Styles
-				filled: true,
-				pointRadiusMinPixels: 2,
-				opacity: 1,
-				pointRadiusScale: 2000,
-				// getRadius: f => 11 - f.properties.scalerank,
-				getFillColor: [200, 0, 80, 180],
-				// Interactive props
-				pickable: true,
-				autoHighlight: true,
-				onClick: this._onClick
-			}),
 			new TripsLayer({
 				id: 'trips-layer',
 				data: DATA_URL.TRIPS_TEST,
 				// deduct start timestamp from each data point to avoid overflow
-				getPath: d => d.segments.map(p => [p[0], p[1], p[2] - 90820]),
+				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
 				getColor: (d) => {
 					if(d.vendor === 0) {
 						return [253, 128, 93]
@@ -125,18 +112,7 @@ class DeckGlWrapper extends React.Component {
 				rounded: true,
 				trailLength: 1000,
 				currentTime: this.state.time
-			}),
-			// new PolygonLayer({
-			// 	id: 'buildings',
-			// 	data: DATA_URL.BUILDING,
-			// 	extruded: true,
-			// 	wireframe: false,
-			// 	opacity: 1,
-			// 	getPolygon: f => f.polygon,
-			// 	getElevation: f => f.height,
-			// 	getFillColor: [74, 80, 87],
-			// 	material
-			// }),
+            })
 		]
 	}
 
