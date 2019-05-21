@@ -5,9 +5,15 @@ const {resolve} = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+  template: './index.html',
+  filename: 'index.html',
+  inject: 'body'
+});
+
 const CONFIG = {
   entry: {
-    app: './app.js'
+    app: './index.js'
   },
 
   devtool: 'source-map',
@@ -36,8 +42,8 @@ const CONFIG = {
 
   // Optional: Enables reading mapbox token from environment variable
   plugins: [
+    HtmlWebpackPluginConfig,
     new webpack.EnvironmentPlugin(['MapboxAccessToken']),
-    new HtmlWebpackPlugin({title: 'deck.gl example'})
   ]
 };
 
