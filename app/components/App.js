@@ -1,22 +1,32 @@
 import React from 'react';
 import DeckGlWrapper from './DeckGL/index';
+import Controls from './Controls/index';
+import { connect } from "react-redux";
 
-class AppContainer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+import store from '../../store/index';
 
-    componentDidMount() {
-        console.log('App wrapper component loaded');
-    }
+import { setTime } from '../../store/actions/index';
 
-    render() {
-        return (
-            <div className="app-wrapper">
-                <DeckGlWrapper/>
-            </div>
-        );
+const bindActionsToDispatch = dispatch => (
+    {
+        setTime : () => dispatch(setTime)
     }
+);
+
+function AppContainer(props) {
+
+    return (
+        <div className="app-wrapper">
+            <DeckGlWrapper/>
+            <Controls time={props.time}/>
+        </div>
+    );
 }
 
-export default AppContainer;
+const mapStateToProps = function(state) {
+    return {
+      time: state.time,
+    }
+  }
+
+export default connect(mapStateToProps)(AppContainer);

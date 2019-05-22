@@ -4,6 +4,10 @@
 const {resolve} = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const ExtractTextPluginConfig = new ExtractTextPlugin('public/style.css', {
+});
 
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './index.html',
@@ -29,7 +33,11 @@ const CONFIG = {
         options: {
           presets: ['@babel/preset-react']
         }
-      }
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('css-loader!sass-loader')
+    },
     ]
   },
 
@@ -43,7 +51,9 @@ const CONFIG = {
   // Optional: Enables reading mapbox token from environment variable
   plugins: [
     HtmlWebpackPluginConfig,
+    ExtractTextPluginConfig,
     new webpack.EnvironmentPlugin(['MapboxAccessToken']),
+    
   ]
 };
 

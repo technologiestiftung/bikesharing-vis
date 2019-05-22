@@ -10,6 +10,17 @@ import { PolygonLayer } from '@deck.gl/layers';
 
 import { config } from '../../../config.js';
 
+import { connect } from "react-redux";
+import { setTime, setTimeOffset } from '../../../store/actions/index';
+
+function mapStateToProps(state) {
+  return {
+		time: state.time,
+		animate: state.animate,
+		timeOffset: state.timeOffset
+  };
+}
+
 // Set your mapbox token here
 const MAPBOX_TOKEN = config.token; // eslint-disable-line
 
@@ -24,7 +35,7 @@ const DATA_URL = {
   TRIPS:
 	'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json', // eslint-disable-line
 	TRIPS_TEST:
-	'./data_routed_by_trips_merged.json'
+	'./data/data_routed_by_trips_merged.json'
 };
 
 export const INITIAL_VIEW_STATE = {
@@ -56,12 +67,18 @@ const pointLight = new PointLight({
 const lightingEffect = new LightingEffect({ambientLight, pointLight});
 
 class DeckGlWrapper extends React.Component {
+
 	constructor(props) {
 		super(props);
+
 		this.state = {
-		  time: 0
-		};
-	  }
+			timePause: null,
+			timePlay: null,
+			timeCurrent: null,
+			timePrev: null,
+			started: true
+		}
+	}
 
 	_onClick(info) {
 		if (info.object) {
@@ -70,25 +87,67 @@ class DeckGlWrapper extends React.Component {
 		}
 	}
 
+	editTime(val) {
+		this.props.dispatch(setTime(val));
+	}
+
+	editTimeOffset(val) {
+		this.props.dispatch(setTimeOffset(val));
+	}
+
 	componentDidMount() {
 		this._animate();
 	}
 
+	componentDidUpdate(prevProps) {
+
+		if (prevProps.animate == false) {
+			this.state.timePause = this.state.timeCurrent;
+			this.state.started = false;
+		} 
+		
+		if (prevProps.animate == true && this.state.started == false) {
+			this.state.timePlay = this.state.timeCurrent;
+
+			// check if offset becomes bigger than total length
+			if (this.state.pause > this.state.play) {
+				this.editTimeOffset(this.state.timePlay);
+			} else {
+				this.editTimeOffset(this.props.timeOffset + (this.state.timePlay - this.state.timePause));
+			}
+
+			this.state.started = true;
+		}
+
+		if (this.state.timePrev > this.props.time) {
+			console.log(`prev: ${this.state.timePrev}, current: ${this.props.time}`)
+			this.editTimeOffset(0);
+		}
+
+		if (this.props.animate !== prevProps.animate) {
+			this._animate();
+		}
+	}
+
 	_animate() {
 		const {
-		  loopLength = 90820, // unit corresponds to the timestamp in source data
+		  loopLength = 99999, // unit corresponds to the timestamp in source data
 		  animationSpeed = 250 // unit time per second
 		} = this.props;
+
 		const timestamp = Date.now() / 1000;
 		const loopTime = loopLength / animationSpeed;
-	
-		this.setState({
-			time: ((timestamp % loopTime) / loopTime) * loopLength
-        });
-        
-        console.log(this.state.time);
 
-		this._animationFrame = window.requestAnimationFrame(this._animate.bind(this));
+		this.state.timeCurrent = ((timestamp % loopTime) / loopTime) * loopLength
+
+		this.editTime(this.state.timeCurrent - this.props.timeOffset);
+		
+		console.log(this.props.time);
+
+		if (this.props.animate == true) {
+			this.state.timePrev = this.props.time;
+			this._animationFrame = window.requestAnimationFrame(this._animate.bind(this));
+		}
 	}
 
 	_renderLayers() {
@@ -111,7 +170,7 @@ class DeckGlWrapper extends React.Component {
 				widthMinPixels: 5,
 				rounded: true,
 				trailLength: 1000,
-				currentTime: this.state.time
+				currentTime: this.props.time
             })
 		]
 	}
@@ -133,4 +192,4 @@ class DeckGlWrapper extends React.Component {
 	}
 }
 
-export default DeckGlWrapper;
+export default connect(mapStateToProps)(DeckGlWrapper);
