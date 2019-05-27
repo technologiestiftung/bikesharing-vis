@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {StaticMap} from 'react-map-gl';
+import {MapGL, StaticMap, FlyToInterpolator} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
 import {PhongMaterial} from '@luma.gl/core';
 import {AmbientLight, PointLight, LightingEffect} from '@deck.gl/core';
+
+import { easeCubic as d3EaseCubic } from 'd3';
 
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { PolygonLayer } from '@deck.gl/layers';
@@ -11,13 +13,14 @@ import { PolygonLayer } from '@deck.gl/layers';
 import { config } from '../../../config.js';
 
 import { connect } from "react-redux";
-import { setTime, setTimeOffset } from '../../../store/actions/index';
+import { setTime, setTimeOffset, setViewport } from '../../../store/actions/index';
 
 function mapStateToProps(state) {
   return {
 		time: state.time,
 		animate: state.animate,
-		timeOffset: state.timeOffset
+		timeOffset: state.timeOffset,
+		viewport: state.viewport
   };
 }
 
@@ -76,7 +79,8 @@ class DeckGlWrapper extends React.Component {
 			timePlay: null,
 			timeCurrent: null,
 			timePrev: null,
-			started: true
+			started: true,
+			frame: 0
 		}
 	}
 
@@ -85,6 +89,10 @@ class DeckGlWrapper extends React.Component {
 			// eslint-disable-next-line
 			alert(`${info.object.properties.name} (${info.object.properties.abbrev})`);
 		}
+	}
+
+	editViewport(val) {
+		this.props.dispatch(setViewport(val));
 	}
 
 	editTime(val) {
@@ -132,17 +140,15 @@ class DeckGlWrapper extends React.Component {
 	_animate() {
 		const {
 		  loopLength = 99999, // unit corresponds to the timestamp in source data
-		  animationSpeed = 250 // unit time per second
+		  animationSpeed = 1 // unit time per second
 		} = this.props;
 
-		const timestamp = Date.now() / 1000;
+		this.state.frame+= 20 // Date.now() / 1000;
 		const loopTime = loopLength / animationSpeed;
 
-		this.state.timeCurrent = ((timestamp % loopTime) / loopTime) * loopLength
+		this.state.timeCurrent = ((this.state.frame % loopTime) / loopTime) * loopLength
 
 		this.editTime(this.state.timeCurrent - this.props.timeOffset);
-		
-		console.log(this.props.time);
 
 		if (this.props.animate == true) {
 			this.state.timePrev = this.props.time;
@@ -180,13 +186,19 @@ class DeckGlWrapper extends React.Component {
 
 		return (
             <DeckGL 
-                layers={this._renderLayers()}
+                // layers={this._renderLayers()}
                 effects={[lightingEffect]}
-                initialViewState={INITIAL_VIEW_STATE} 
+                initialViewState={this.props.viewport} 
+								viewState={this.props.viewport}
                 controller={true}
+								onViewportChange={this.editViewport}
             >
-                <StaticMap mapboxApiAccessToken={MAPBOX_TOKEN} 
-                mapStyle="mapbox://styles/mapbox/light-v9" />
+                <StaticMap 
+									mapboxApiAccessToken={MAPBOX_TOKEN} 
+                	mapStyle="mapbox://styles/mapbox/dark-v9" 
+									transitionInterpolator={new FlyToInterpolator()}
+								/>
+
             </DeckGL>
 		);
 	}

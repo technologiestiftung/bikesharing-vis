@@ -20,7 +20,7 @@ const linearTimeScale = (val) => {
 function Clock(props) {
     return (
         <div className="clock-wrapper">
-            <span>{() => { return linearTimeScale(props.time)}}</span>
+            {/* <span>{() => { return linearTimeScale(props.time)}}</span> */}
         </div>
     );
 }

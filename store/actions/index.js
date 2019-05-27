@@ -1,6 +1,7 @@
 import { SET_TIME } from '../constants/action-types';
 import { SET_STATE_DECKGL } from '../constants/action-types';
 import { SET_TIME_OFFSET } from '../constants/action-types';
+import { SET_VIEWPORT } from '../constants/action-types';
 
 export function setTime(payload) {
     return { 
@@ -19,6 +20,13 @@ export function setStateDeckGl(payload) {
 export function setTimeOffset(payload) {
     return { 
         type: SET_TIME_OFFSET, 
+        payload 
+    };
+}
+
+export function setViewport(payload) {
+    return { 
+        type: SET_VIEWPORT, 
         payload 
     };
 }
