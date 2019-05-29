@@ -1,11 +1,13 @@
 import React from 'react';
 import DeckGlWrapper from './DeckGL/index';
-import Controls from './Controls/index';
 import Analyse from './Analyse/index';
+import Filter from './Filter/index';
+import LogoSvg from './Logo/index';
 import { connect } from "react-redux";
 import { setTime, setLoaded, setData } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
+
 
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -65,8 +67,9 @@ class AppContainer extends React.Component {
             <ThemeProvider theme={theme}>
                 <div className="app-wrapper">
                     <DeckGlWrapper/>
-                    <Controls time={this.props.time}/>
                     <Analyse/>
+                    <Filter/>
+                    <LogoSvg/>
                 </div>
             </ThemeProvider>
             )

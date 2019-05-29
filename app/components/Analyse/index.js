@@ -15,7 +15,7 @@ const mapStateToProps = function(state) {
 const AnalyseWrapperDiv = styled.div`
     position: absolute;
     width: 300px;
-    height: 100px;
+    height: 65px;
     padding: 15px;
     background: ${props => props.theme.colorPrimaryDark};
     bottom: 0px;
