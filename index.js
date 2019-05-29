@@ -10,8 +10,6 @@ import { setTime } from './store/actions/index.js';
 window.store = store;
 window.setTime = setTime;
 
-import './assets/stylesheets/style.scss';
-
 function startApp() {
     const rootElement = document.getElementById('app');
 

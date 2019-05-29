@@ -37,7 +37,15 @@ const CONFIG = {
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('css-loader!sass-loader')
-    },
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]' 
+      }
     ]
   },
 

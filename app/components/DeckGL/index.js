@@ -8,7 +8,7 @@ import {AmbientLight, PointLight, LightingEffect} from '@deck.gl/core';
 import { easeCubic as d3EaseCubic } from 'd3';
 
 import { TripsLayer } from '@deck.gl/geo-layers';
-import { PolygonLayer } from '@deck.gl/layers';
+import { PolygonLayer, Layer } from '@deck.gl/layers';
 
 import { config } from '../../../config.js';
 
@@ -20,7 +20,9 @@ function mapStateToProps(state) {
 		time: state.time,
 		animate: state.animate,
 		timeOffset: state.timeOffset,
-		viewport: state.viewport
+		viewport: state.viewport,
+		loaded: state.loaded,
+		data: state.data
   };
 }
 
@@ -67,6 +69,19 @@ const pointLight = new PointLight({
   position: [-74.05, 40.7, 8000]
 });
 
+const paintLayer = {
+	'fill-extrusion-color': '#aaa',
+	'fill-extrusion-height': {
+		type: 'identity',
+		property: 'height'
+	},
+	'fill-extrusion-base': {
+		type: 'identity',
+		property: 'min_height'
+	},
+	'fill-extrusion-opacity': 0.6
+};
+
 const lightingEffect = new LightingEffect({ambientLight, pointLight});
 
 class DeckGlWrapper extends React.Component {
@@ -89,6 +104,26 @@ class DeckGlWrapper extends React.Component {
 			// eslint-disable-next-line
 			alert(`${info.object.properties.name} (${info.object.properties.abbrev})`);
 		}
+	}
+
+	_onload(map) {
+		// const insertBefore = getFirstTextLayerId(map.getStyle());
+		// map.addLayer(new RenderDeckLayerById({id: 'below-labels'}), insertBefore);
+	
+		// map.addLayer({
+		// 	id:"3d-buildings",
+		// 	sourceId:"composite",
+		// 	sourceLayer:"building",
+		// 	// filter: ['==', 'extrude', 'true'],
+		// 	minZoom: 14,
+		// 	'fill-extrusion-color': '#aaa',
+		// 	'fill-extrusion-height': [ 'interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'height'] ], 'fill-extrusion-base': [ 'interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'min_height'] ],
+		// 	'fill-extrusion-opacity': 1,
+		// 	paint: paintLayer
+		// })
+	
+		// Typically goes last
+		// map.addLayer(new RenderRemainingDeckLayers());
 	}
 
 	editViewport(val) {
@@ -160,7 +195,7 @@ class DeckGlWrapper extends React.Component {
 		return [
 			new TripsLayer({
 				id: 'trips-layer',
-				data: DATA_URL.TRIPS_TEST,
+				data: this.props.data,
 				// deduct start timestamp from each data point to avoid overflow
 				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
 				getColor: (d) => {
@@ -177,30 +212,54 @@ class DeckGlWrapper extends React.Component {
 				rounded: true,
 				trailLength: 1000,
 				currentTime: this.props.time
-            })
+						}),
 		]
 	}
 
 	render() {
 		const {viewState, controller = true, baseMap = true} = this.props;
 
-		return (
-            <DeckGL 
-                // layers={this._renderLayers()}
-                effects={[lightingEffect]}
-                initialViewState={this.props.viewport} 
-								viewState={this.props.viewport}
-                controller={true}
-								onViewportChange={this.editViewport}
-            >
-                <StaticMap 
-									mapboxApiAccessToken={MAPBOX_TOKEN} 
-                	mapStyle="mapbox://styles/mapbox/dark-v9" 
-									transitionInterpolator={new FlyToInterpolator()}
-								/>
+		if(this.props.loaded) {
+			return (
+				<DeckGL 
+						layers={this._renderLayers()}
+						effects={[lightingEffect]}
+						initialViewState={this.props.viewport} 
+						viewState={this.props.viewport}
+						controller={true}
+						onViewportChange={this.editViewport}
+				>
+						<StaticMap 
+							mapboxApiAccessToken={MAPBOX_TOKEN} 
+							mapStyle="mapbox://styles/mapbox/dark-v9" 
+							transitionInterpolator={new FlyToInterpolator()}
+							onLoad={this._onload.bind(this)}
+						/>
 
-            </DeckGL>
+				</DeckGL>
+			);
+		} else {
+			
+		}
+
+		return (
+			<DeckGL 
+					// layers={this._renderLayers()}
+					effects={[lightingEffect]}
+					initialViewState={this.props.viewport} 
+					viewState={this.props.viewport}
+					controller={true}
+					onViewportChange={this.editViewport}
+			>
+					<StaticMap 
+						mapboxApiAccessToken={MAPBOX_TOKEN} 
+						mapStyle="mapbox://styles/mapbox/dark-v9" 
+						transitionInterpolator={new FlyToInterpolator()}
+						onLoad={this._onload.bind(this)}
+					/>
+			</DeckGL>
 		);
+
 	}
 }
 

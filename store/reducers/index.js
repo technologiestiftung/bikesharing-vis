@@ -2,7 +2,10 @@ const initialState = {
     time: 0,
     animate: true,
     timeOffset: 0,
-    transitionDuration: 1000,
+    data: null,
+    loaded: false,
+    vendor: [1, 0],
+    transitionDuration: 5000,
     viewport: {
         latitude: 52.500869,
         longitude: 13.419047,
@@ -34,6 +37,18 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_VIEWPORT') {
         return {...state, viewport: action.payload }
+    }    
+
+    if (action.type === 'SET_LOADED') {
+        return {...state, loaded: action.payload }
+    }    
+
+    if (action.type === 'SET_DATA') {
+        return {...state, data: action.payload }
+    }    
+
+    if (action.type === 'SET_VENDOR') {
+        return {...state, vendor: action.payload }
     }    
 
     return state;

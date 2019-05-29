@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setViewport } from '../../../store/actions/index';
+import { setStateDeckGl, setViewport, setVendor } from '../../../store/actions/index';
 import {FlyToInterpolator} from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 
@@ -8,7 +8,8 @@ function mapStateToProps(state) {
     return {
       animate: state.animate,
       viewport: state.viewport,
-      transitionDuration: state.transitionDuration
+      transitionDuration: state.transitionDuration,
+      vendor: state.vendor
     };
   }
 
@@ -20,6 +21,8 @@ function playPause(props) {
             longitude: 9.988456,
             latitude: 53.588871,
             zoom: 14,
+            pitch: 45,
+            bearing: 0,
             transitionDuration: props.transitionDuration,
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: d3EaseCubic
@@ -38,6 +41,8 @@ function playPause(props) {
             longitude: -74.1,
             latitude: 40.7,
             zoom: 14,
+            pitch: 45,
+            bearing: 0,
             transitionDuration: props.transitionDuration,
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: d3EaseCubic
@@ -45,6 +50,30 @@ function playPause(props) {
 
         props.dispatch(setStateDeckGl(false));
         props.dispatch(setViewport(NYC));
+        setTimeout(() => {
+            props.dispatch(setStateDeckGl(true));
+        },props.transitionDuration)
+    }
+    
+    function setVendor() {
+
+    }
+
+    function moveToBerlin(val) {
+
+        const Berlin = {
+            latitude: 52.500869,
+            longitude: 13.419047,
+            zoom: 16,
+            pitch: 45,
+            bearing: 0,
+            transitionDuration: props.transitionDuration,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionEasing: d3EaseCubic
+        }
+
+        props.dispatch(setStateDeckGl(false));
+        props.dispatch(setViewport(Berlin));
         setTimeout(() => {
             props.dispatch(setStateDeckGl(true));
         },props.transitionDuration)
@@ -61,6 +90,9 @@ function playPause(props) {
             <button onClick={editStateDeckGl}>Play</button>
             <button onClick={moveToNYC}>New York</button>
             <button onClick={moveToHH}>Hamburg</button>
+            <button onClick={moveToBerlin}>Berlin</button>
+
+            <button onClick={moveToBerlin}>Berlin</button>
         </div>
     );
 }
