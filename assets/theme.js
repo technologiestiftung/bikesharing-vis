@@ -6,6 +6,9 @@ const theme = {
     fontFamily: 'IBM Plex Sans',
     fontSizeXl: '2rem',
     fontSizeL: '1rem',
+    timeS: '.125s',
+    timeM: '.25s',
+    timeL: '.5s',
 }
 
 export default theme;
