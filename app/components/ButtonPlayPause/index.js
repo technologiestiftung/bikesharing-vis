@@ -43,27 +43,27 @@ class ButtonPlayPause extends React.Component {
         }
     }
 
-    animateTrue() {
-        props.dispatch(setStateDeckGl(true));
+    animateTrue = () => {
+        this.props.dispatch(setStateDeckGl(true));
     }
 
-    animateFalse() {
-        props.dispatch(setStateDeckGl(false));
+    animateFalse = () => {
+        this.props.dispatch(setStateDeckGl(false));
     }
 
-    handleMouseEnter() {
+    handleMouseEnter = () => {
         this.setState({
             isHovered: true
         })
     }
 
-    handleMouseLeave() {
+    handleMouseLeave = () => {
         this.setState({
             isHovered: false
         })
     }
 
-    handleMouseDown() {
+    handleMouseDown = () => {
         const pressed = this.state.isPressed ? false : true;
 
         this.setState({
