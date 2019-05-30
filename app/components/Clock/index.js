@@ -47,14 +47,16 @@ function Clock(props) {
         const hour = Number(date.getHours());
 
         
-        const hourTwoDigits = hour < 10 ? `0${hour}` : hour;
-
+        
         const minutes = date.getMinutes();
         const seconds = date.getSeconds();
+        
+        const hourTwoDigits = hour < 10 ? `0${hour}` : hour;
+        const minutesTwoDigits = minutes < 10 ? `0${minutes}` : minutes;
+        const secondsTwoDigits = seconds < 10 ? `0${seconds}` : seconds;
 
 
-
-        return `${hourTwoDigits}:${minutes}:${seconds}`;
+        return `${hourTwoDigits}:${minutesTwoDigits}:${secondsTwoDigits}`;
     }
 
     function currentDate(val) {

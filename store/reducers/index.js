@@ -5,6 +5,7 @@ const initialState = {
     data: null,
     loaded: false,
     vendor: [1, 0],
+    histogram: null,
     transitionDuration: 5000,
     viewport: {
         latitude: 52.500869,
@@ -49,6 +50,10 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_VENDOR') {
         return {...state, vendor: action.payload }
+    }    
+
+    if (action.type === 'SET_HISTOGRAM') {
+        return {...state, histogram: action.payload }
     }    
 
     return state;

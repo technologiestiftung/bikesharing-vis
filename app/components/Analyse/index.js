@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import Clock from '../Clock/index';
 import ButtonPlayPause from '../ButtonPlayPause/index';
+import Histogram from '../Histogram/index';
 
 const mapStateToProps = function(state) {
     return {
@@ -15,7 +16,7 @@ const mapStateToProps = function(state) {
 
 const AnalyseWrapperDiv = styled.div`
     position: absolute;
-    width: 300px;
+    width: 600px;
     height: 65px;
     padding-top: 13px;
     padding-left: 15px;
@@ -51,6 +52,7 @@ class AnalyseWrapper extends React.Component {
                     </TimeWrapper>
                     <ButtonPlayPause type="play"/>
                     <ButtonPlayPause type="pause"/>
+                    <Histogram/>
                 </FlexWrapper>
             </AnalyseWrapperDiv>
         )

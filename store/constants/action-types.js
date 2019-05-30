@@ -5,3 +5,4 @@ export const SET_VIEWPORT = "SET_VIEWPORT";
 export const SET_LOADED = "SET_LOADED";
 export const SET_DATA = "SET_DATA";
 export const SET_VENDOR = "SET_VENDOR";
+export const SET_HISTOGRAM = "SET_HISTOGRAM";

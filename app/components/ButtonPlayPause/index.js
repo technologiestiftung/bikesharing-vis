@@ -11,13 +11,26 @@ const ButtonDiv = styled.div`
     color: ${props => props.theme.colorLight};
     border-radius: 4px;
     cursor: pointer;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 15px;
     margin-right: 10px;
-    transition: background ${props => props.theme.timeM} ease;
+    transition: background ${props => props.theme.timeS} ease;
 
-    &:hover {
+    polygon {
+        fill: color: ${props => props.theme.colorLight};
+    }
+
+    &.btn-over {
+        background: ${props => props.theme.colorLight};
+        transition: background ${props => props.theme.timeS} ease;
+
+        g#svgShape {
+            fill: ${props => props.theme.colorPrimaryDark};
+        }
+    }
+
+    &.btn-pressed {
         background: ${props => props.theme.colorWhite};
         transition: background ${props => props.theme.timeS} ease;
     }
@@ -44,10 +57,14 @@ class ButtonPlayPause extends React.Component {
     }
 
     animateTrue = () => {
+        let nodes = document.querySelectorAll('.btn');
+        nodes[1].classList.remove('btn-pressed');
         this.props.dispatch(setStateDeckGl(true));
     }
 
     animateFalse = () => {
+        let nodes = document.querySelectorAll('.btn');
+        nodes[0].classList.remove('btn-pressed');
         this.props.dispatch(setStateDeckGl(false));
     }
 
@@ -55,6 +72,7 @@ class ButtonPlayPause extends React.Component {
         this.setState({
             isHovered: true
         })
+        console.log(this.state)
     }
 
     handleMouseLeave = () => {
@@ -90,7 +108,7 @@ class ButtonPlayPause extends React.Component {
                 >
                     <svg width="11px" height="14px" viewBox="0 0 11 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                            <g id="Artboard-Copy-5" transform="translate(-694.000000, -988.000000)" fill="#2B2929">
+                            <g id="svgShape" transform="translate(-694.000000, -988.000000)" fill="#4E4C4C">
                                 <g id="Group-13" transform="translate(676.000000, 973.105951)">
                                     <polygon id="Rectangle-Copy-11" transform="translate(20.000000, 22.000000) rotate(-315.000000) translate(-20.000000, -22.000000) " points="14 18.5768468 26 16 23.4231532 28 18.7115766 23.2884234"></polygon>
                                 </g>
@@ -112,7 +130,7 @@ class ButtonPlayPause extends React.Component {
             >
                     <svg width="11px" height="15px" viewBox="0 0 11 15" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                            <g id="Artboard-Copy-5" transform="translate(-748.000000, -988.000000)" fill="#FFFFFF">
+                            <g id="svgShape" transform="translate(-748.000000, -988.000000)" fill="#4E4C4C">
                                 <g id="Group-3" transform="translate(731.000000, 973.105951)">
                                     <g id="Group-3-Copy" transform="translate(17.000000, 15.000000)">
                                         <g id="Group-2">

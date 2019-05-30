@@ -4,6 +4,7 @@ import { SET_TIME_OFFSET } from '../constants/action-types';
 import { SET_VIEWPORT } from '../constants/action-types';
 import { SET_LOADED } from '../constants/action-types';
 import { SET_DATA } from '../constants/action-types';
+import { SET_HISTOGRAM } from '../constants/action-types';
 
 export function setTime(payload) {
     return { 
@@ -50,6 +51,13 @@ export function setData(payload) {
 export function setVendor(payload) {
     return { 
         type: SET_VENDOR, 
+        payload 
+    };
+}
+
+export function setHistogram(payload) {
+    return { 
+        type: SET_HISTOGRAM, 
         payload 
     };
 }
