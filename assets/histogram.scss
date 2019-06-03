@@ -1,0 +1,15 @@
+rect.bar {
+    opacity: .1;
+    transition: all .25s ease;
+
+    &.past {
+        opacity: 1;
+        transition: all .25s ease;
+    }
+
+    &.active {
+        fill: red;
+        opacity: 1;
+        transition: all .25s ease;
+    }
+}

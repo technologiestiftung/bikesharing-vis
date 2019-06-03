@@ -4,7 +4,7 @@ import Analyse from './Analyse/index';
 import Filter from './Filter/index';
 import LogoSvg from './Logo/index';
 import { connect } from "react-redux";
-import { setTime, setLoaded, setData, setHistogram } from '../../store/actions/index';
+import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2 } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
 
@@ -18,7 +18,10 @@ const mapStateToProps = function(state) {
       time: state.time,
       data: state.data,
       vendor: state.vendor,
-      histogram: state.histogram
+      histogram: state.histogram,
+      provier0: state.provider0,
+      provier1: state.provider1,
+      provier2: state.provider2,
     }
 }
 
@@ -32,6 +35,72 @@ class AppContainer extends React.Component {
     
     fetchData(vendorId) {
         d3Json('../../data/data_routed_by_trips_merged.json')
+            // count active trips in time and store in separate arrays for each provider
+            .then((data) => {
+
+                let timestampsArr0 = [];
+                let timestampsArr1 = [];
+                let timestampsArr2 = [];
+
+                data.forEach(trip => {
+                    const firstTimestamp = trip.segments[0][2]
+                    const lastTimestamp = trip.segments[trip.segments.length - 1][2]
+
+                    if (trip.vendor == 0) {
+                        timestampsArr0.push([firstTimestamp, lastTimestamp]);
+                    } else if (trip.vendor == 1) {
+                        timestampsArr1.push([firstTimestamp, lastTimestamp]);
+                    } else if (trip.vendor == 2) {
+                        timestampsArr2.push([firstTimestamp, lastTimestamp]);
+                    }
+
+                })
+
+                let tripsByTime0 = [];
+                let tripsByTime1 = [];
+                let tripsByTime2 = [];
+
+
+                for (let index = 0; index < 99999; index += 1000) {
+                    let tripsCount = 0;
+                    
+                    timestampsArr0.forEach(timestamp => {
+                        if (index > timestamp[0] && index < timestamp[1]) {
+                            tripsCount += 1;
+                        }
+                    })
+                    tripsByTime0.push([index, tripsCount]);
+                }   
+
+                for (let index = 0; index < 99999; index += 1000) {
+                    let tripsCount = 0;
+                    
+                    timestampsArr1.forEach(timestamp => {
+                        if (index > timestamp[0] && index < timestamp[1]) {
+                            tripsCount += 1;
+                        }
+                    })
+                    tripsByTime1.push([index, tripsCount]);
+                }   
+
+                for (let index = 0; index < 99999; index += 1000) {
+                    let tripsCount = 0;
+                    
+                    timestampsArr2.forEach(timestamp => {
+                        if (index > timestamp[0] && index < timestamp[1]) {
+                            tripsCount += 1;
+                        }
+                    })
+                    tripsByTime2.push([index, tripsCount]);
+                }   
+
+                this.props.dispatch(setProvider0(tripsByTime0));
+                this.props.dispatch(setProvider1(tripsByTime1));
+                this.props.dispatch(setProvider2(tripsByTime2));
+
+                return data;
+            })
+            // filter data by provider
             .then((data) => {
                 const selectedVendors = vendorId.length;
 
@@ -74,7 +143,7 @@ class AppContainer extends React.Component {
                 // count trips for every 10 minutes
                 let tripsByTime = [];
 
-                for (let index = 0; index < 99999; index += 347) {
+                for (let index = 0; index < 99999; index += 1000) {
                     let tripsCount = 0;
                     
                     arr.forEach(timestamp => {
@@ -89,6 +158,7 @@ class AppContainer extends React.Component {
                 return tripsByTime;
             }).then(histogramData => {
                 this.props.dispatch(setHistogram(histogramData));
+                console.log(this.props)
             })
     }
 
