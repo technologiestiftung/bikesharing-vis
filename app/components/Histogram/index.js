@@ -20,8 +20,9 @@ const mapStateToProps = function(state) {
 }
 
 const HistogramWrapper = styled.div`
-    width: 400px;
+    width: 350px;
     height: 50px;
+    margin: 0px 20px 0px 10px;
 `
 
 class Histogram extends React.Component {

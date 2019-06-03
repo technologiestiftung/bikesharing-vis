@@ -13,9 +13,10 @@ const mapStateToProps = function(state) {
       time: state.time,
       data: state.data,
       vendor: state.vendor,
-      activeBikes0: state.activeBikes0,
-      activeBikes1: state.activeBikes1,
-      activeBikes2: state.activeBikes2,
+      provider0: state.provider0,
+      provider1: state.provider1,
+      provider2: state.provider2,
+      barCurrent: state.barCurrent
     }
 }
 
@@ -28,6 +29,7 @@ const AnalyseWrapperDiv = styled.div`
     padding-bottom: 12px;
     background: ${props => props.theme.colorPrimaryDark};
     bottom: 0px;
+    border-radius: 4px 4px 0px 0px;
     right: 25%;
     left: 50%;
     margin-left: -450px;
@@ -46,7 +48,20 @@ const TimeWrapper = styled.div`
 class AnalyseWrapper extends React.Component {
     constructor(props) {
         super(props);
+
+        this.currentBikes0 = null;
+        this.currentBikes1 = null;
+        this.currentBikes2 = null;
     } 
+
+    componentDidUpdate() {
+        
+        if (this.props.provider0[this.props.barCurrent] != undefined) {
+            this.currentBikes0 = this.props.provider0[this.props.barCurrent][1];
+            this.currentBikes1 = this.props.provider1[this.props.barCurrent][1];
+            this.currentBikes2 = this.props.provider2[this.props.barCurrent][1];
+        }
+    }
 
     render() {
         return (
@@ -58,9 +73,9 @@ class AnalyseWrapper extends React.Component {
                     <ButtonPlay/>
                     <ButtonPause/>
                     <Histogram/>
-                    <Counter bikeCount={this.props.activeBikes0} provider="LIDL-Bike"/>
-                    <Counter bikeCount={this.props.activeBikes1} provider="Nextbike"/>
-                    <Counter bikeCount={this.props.activeBikes2} provider="Mobike"/>
+                    <Counter bikeCount={this.currentBikes0} provider="LIDL-Bike"/>
+                    <Counter bikeCount={this.currentBikes1} provider="Nextbike"/>
+                    <Counter bikeCount={this.currentBikes2} provider="Mobike"/>
                 </FlexWrapper>
             </AnalyseWrapperDiv>
         )
