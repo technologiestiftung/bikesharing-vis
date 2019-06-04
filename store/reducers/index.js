@@ -20,6 +20,7 @@ const initialState = {
     provider0: 0,
     provider1: 0,
     provider2: 0,
+    overlayInfo: true,
     barCurrent: null
 }
 
@@ -93,6 +94,10 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'TOGGLE_UPDATE') {
         return {...state, update: action.payload }
+    }
+
+    if (action.type === 'TOGGLE_OVERLAY_INFO') {
+        return {...state, overlayInfo: action.payload }
     }
 
     return state;

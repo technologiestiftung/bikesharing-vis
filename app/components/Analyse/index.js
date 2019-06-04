@@ -23,7 +23,7 @@ const mapStateToProps = function(state) {
 const AnalyseWrapperDiv = styled.div`
     position: absolute;
     width: 900px;
-    height: 53px;
+    height: 40px;
     padding-top: 13px;
     padding-left: 15px;
     padding-bottom: 12px;

@@ -10,7 +10,6 @@ const DateWrapper = styled.div`
 `;
 
 const TimeWrapper = styled.div`
-    font-size: ${props => props.theme.fontSizeXl};
     font-weight: bold;
 `;
 

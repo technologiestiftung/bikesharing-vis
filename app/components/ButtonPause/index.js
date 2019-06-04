@@ -11,10 +11,11 @@ const ButtonDiv = styled.div`
     color: ${props => props.theme.colorLight};
     border-radius: 4px;
     cursor: pointer;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 15px;
-    margin-right: 10px;
+    padding-left: 13px;
+    padding-right: 13px;
+    height: 28px;
+    padding-top: 9px;
+    margin-right: 11px;
     transition: background ${props => props.theme.timeS} ease;
 
     polygon {

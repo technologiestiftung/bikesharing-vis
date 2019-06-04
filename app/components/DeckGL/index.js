@@ -233,7 +233,10 @@ class DeckGlWrapper extends React.Component {
 							mapboxApiAccessToken={MAPBOX_TOKEN} 
 							mapStyle="mapbox://styles/mapbox/dark-v9" 
 							transitionInterpolator={new FlyToInterpolator()}
-							onLoad={this._onload.bind(this)}
+							captureScroll={false}
+							captureDrag={false}
+							onLoad={this._onload.bind(this)
+							}
 						/>
 
 				</DeckGL>
@@ -255,6 +258,8 @@ class DeckGlWrapper extends React.Component {
 						mapboxApiAccessToken={MAPBOX_TOKEN} 
 						mapStyle="mapbox://styles/mapbox/dark-v9" 
 						transitionInterpolator={new FlyToInterpolator()}
+						captureScroll={false}
+						captureDrag={false}
 						onLoad={this._onload.bind(this)}
 					/>
 			</DeckGL>

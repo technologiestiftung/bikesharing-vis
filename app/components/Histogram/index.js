@@ -21,7 +21,7 @@ const mapStateToProps = function(state) {
 
 const HistogramWrapper = styled.div`
     width: 350px;
-    height: 50px;
+    height: 35px;
     margin: 0px 20px 0px 10px;
 `
 

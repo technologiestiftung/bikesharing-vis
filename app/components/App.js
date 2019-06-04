@@ -2,7 +2,10 @@ import React from 'react';
 import DeckGlWrapper from './DeckGL/index';
 import Analyse from './Analyse/index';
 import Filter from './Filter/index';
+import Overlay from './Overlay/index';
+import ButtonInfo from './ButtonInfo/index';
 import LogoSvg from './Logo/index';
+import OverlayAbout from './OverlayAbout/index';
 import { connect } from "react-redux";
 import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
@@ -37,7 +40,9 @@ class AppContainer extends React.Component {
     }
     
     fetchData(vendorId) {
-        d3Json('../../data/data_routed_by_trips_merged.json')
+        d3Json('./data/data_routed_by_trips_merged.json')
+        // uncomment for deployment
+        // d3Json('/projects/bikesharing/data/data_routed_by_trips_merged.json')
             // count active trips in time and store in separate arrays for each provider
             .then((data) => {
 
@@ -154,7 +159,6 @@ class AppContainer extends React.Component {
                             tripsCount += 1;
                         }
                     })
-
                     tripsByTime.push([index, tripsCount]);
                 }        
                 
@@ -184,9 +188,12 @@ class AppContainer extends React.Component {
             <ThemeProvider theme={theme}>
                 <div className="app-wrapper">
                     <DeckGlWrapper/>
+                    <Overlay/>
+                    <ButtonInfo/>
                     <Analyse/>
                     <Filter/>
                     <LogoSvg/>
+                    <OverlayAbout/>
                 </div>
             </ThemeProvider>
             )

@@ -6,13 +6,12 @@ import styled from 'styled-components';
 const CounterWrapper = styled.div`
     font-family: ${props => props.theme.fontFamily};
     color: ${props => props.theme.colorWhite};
-    width: 75px;
+    width: 95px;
     height: 50px;
     
 `;
 
 const CountWrapper = styled.div`
-    font-size: ${props => props.theme.fontSizeXl};
     font-weight: bold;
 `;
 

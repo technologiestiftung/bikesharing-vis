@@ -13,6 +13,7 @@ import { SET_PROVIDER_2 } from '../constants/action-types';
 import { SET_BAR_CURRENT } from '../constants/action-types';
 import { TOGGLE_PROVIDER } from '../constants/action-types';
 import { TOGGLE_UPDATE } from '../constants/action-types';
+import { TOGGLE_OVERLAY_INFO } from '../constants/action-types';
 
 export function setTime(payload) {
     return { 
@@ -122,6 +123,13 @@ export function toggleProvider(payload) {
 export function toggleUpdate(payload) {
     return { 
         type: TOGGLE_UPDATE, 
+        payload 
+    };
+}
+
+export function toggleOverlayInfo(payload) {
+    return { 
+        type: TOGGLE_OVERLAY_INFO, 
         payload 
     };
 }

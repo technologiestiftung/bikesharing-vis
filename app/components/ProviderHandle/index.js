@@ -8,32 +8,41 @@ const ProviderWrapper = styled.span`
     border: 1px solid;
     font-family: ${props => props.theme.fontFamily};
     color: ${props => props.theme.colorLight};
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    height: 20px;
     padding: 2px 6px 3px 6px;
+    margin-right: 10px;
+    transition: all .25s ease;
 
     &#lidlbike {
         color: ${props => props.theme.colorProvider0};
+        transition: all .25s ease;
 
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
             background: ${props => props.theme.colorProvider0};
+            transition: all .25s ease;
         }
     }
     &#nextbike {
         color: ${props => props.theme.colorProvider1};
+        transition: all .25s ease;
 
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
             background: ${props => props.theme.colorProvider1};
+            transition: all .25s ease;
         }
     }
     &#mobike {
         color: ${props => props.theme.colorProvider2};
+        transition: all .25s ease;
 
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
             background: ${props => props.theme.colorProvider2};
+            transition: all .25s ease;
         }
     }
 `;
