@@ -74,7 +74,6 @@ class ButtonPause extends React.Component {
         this.setState({
             isHovered: true
         })
-        console.log(this.state)
     }
 
     handleMouseLeave = () => {
@@ -86,8 +85,6 @@ class ButtonPause extends React.Component {
     handleMouseDown = () => {
         this.props.dispatch(setButtonPlay(false));
         this.props.dispatch(setButtonPause(true));
-
-        console.log(this.props);
     }
 
     render() {

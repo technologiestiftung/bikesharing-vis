@@ -12,3 +12,5 @@ export const SET_PROVIDER_0 = "SET_PROVIDER_0";
 export const SET_PROVIDER_1 = "SET_PROVIDER_1";
 export const SET_PROVIDER_2 = "SET_PROVIDER_2";
 export const SET_BAR_CURRENT = "SET_BAR_CURRENT";
+export const TOGGLE_PROVIDER = "TOGGLE_PROVIDER";
+export const TOGGLE_UPDATE = "TOGGLE_UPDATE";

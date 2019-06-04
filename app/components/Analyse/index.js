@@ -73,8 +73,8 @@ class AnalyseWrapper extends React.Component {
                     <ButtonPlay/>
                     <ButtonPause/>
                     <Histogram/>
-                    <Counter bikeCount={this.currentBikes0} provider="LIDL-Bike"/>
-                    <Counter bikeCount={this.currentBikes1} provider="Nextbike"/>
+                    <Counter bikeCount={this.currentBikes0} provider="Nextbike"/>
+                    <Counter bikeCount={this.currentBikes1} provider="LIDL-Bike"/>
                     <Counter bikeCount={this.currentBikes2} provider="Mobike"/>
                 </FlexWrapper>
             </AnalyseWrapperDiv>

@@ -95,15 +95,23 @@ class Histogram extends React.Component {
             this.init() 
             this.setState({ update: false });
         }
-
+        
         // highlight histogram bar for current timeslot if histogram data is available
         if (this.props.histogram != null) {
             this.highlightedBar = Math.floor(this.histogramDomain(this.props.time));
-
+            
             this.props.dispatch(setBarCurrent(this.highlightedBar));
-
+            
             this.highlightBars()
+
+            if (this.props.barCurrent == this.props.histogram.length - 1) {
+                let bars = d3SelectAll('rect.bar')
+                    .classed('past', false)
+                    .classed('active', false);
+    
+            }
         }
+
     }
 
     componentDidMount() {

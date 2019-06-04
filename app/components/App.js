@@ -4,7 +4,7 @@ import Analyse from './Analyse/index';
 import Filter from './Filter/index';
 import LogoSvg from './Logo/index';
 import { connect } from "react-redux";
-import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2 } from '../../store/actions/index';
+import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
 
@@ -22,10 +22,13 @@ const mapStateToProps = function(state) {
       provier0: state.provider0,
       provier1: state.provider1,
       provier2: state.provider2,
+      loaded: state.loaded,
+      update: state.update
     }
 }
 
 import '../../assets/stylesheet.scss';
+import { updateEvents } from 'react-mapbox-gl/lib/map-events';
 
 class AppContainer extends React.Component {
     
@@ -102,7 +105,7 @@ class AppContainer extends React.Component {
             })
             // filter data by provider
             .then((data) => {
-                const selectedVendors = vendorId.length;
+                const selectedVendors = this.props.vendor.length;
 
                 let filtered;
 
@@ -158,16 +161,22 @@ class AppContainer extends React.Component {
                 return tripsByTime;
             }).then(histogramData => {
                 this.props.dispatch(setHistogram(histogramData));
-                console.log(this.props)
             })
+    }
+
+    filterData = (data) => {
+
     }
 
     componentDidMount() {
         this.fetchData(this.props.vendor);
     }
-
+    
     componentDidUpdate() {
-        
+        if (this.props.update == true) {
+            this.fetchData(this.props.vendor);
+            this.props.dispatch(toggleUpdate(false));
+        }
     }
 
     render() {

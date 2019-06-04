@@ -4,9 +4,10 @@ const initialState = {
     timeOffset: 0,
     data: null,
     loaded: false,
+    update: false,
     buttonPlay: true,
     buttonPause: false,
-    vendor: [0],
+    vendor: [0,1],
     histogram: null,
     transitionDuration: 5000,
     viewport: {
@@ -84,6 +85,14 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_BAR_CURRENT') {
         return {...state, barCurrent: action.payload }
+    }
+
+    if (action.type === 'TOGGLE_PROVIDER') {
+        return {...state, vendor: action.payload }
+    }
+
+    if (action.type === 'TOGGLE_UPDATE') {
+        return {...state, update: action.payload }
     }
 
     return state;

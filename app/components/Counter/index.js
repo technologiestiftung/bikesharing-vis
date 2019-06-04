@@ -8,6 +8,7 @@ const CounterWrapper = styled.div`
     color: ${props => props.theme.colorWhite};
     width: 75px;
     height: 50px;
+    
 `;
 
 const CountWrapper = styled.div`

@@ -11,6 +11,8 @@ import { SET_PROVIDER_0 } from '../constants/action-types';
 import { SET_PROVIDER_1 } from '../constants/action-types';
 import { SET_PROVIDER_2 } from '../constants/action-types';
 import { SET_BAR_CURRENT } from '../constants/action-types';
+import { TOGGLE_PROVIDER } from '../constants/action-types';
+import { TOGGLE_UPDATE } from '../constants/action-types';
 
 export function setTime(payload) {
     return { 
@@ -106,6 +108,20 @@ export function setProvider2(payload) {
 export function setBarCurrent(payload) {
     return { 
         type: SET_BAR_CURRENT, 
+        payload 
+    };
+}
+
+export function toggleProvider(payload) {
+    return { 
+        type: TOGGLE_PROVIDER, 
+        payload 
+    };
+}
+
+export function toggleUpdate(payload) {
+    return { 
+        type: TOGGLE_UPDATE, 
         payload 
     };
 }

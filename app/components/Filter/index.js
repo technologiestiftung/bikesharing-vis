@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
+import classNames from 'classnames';
 
-import Button from '../Button/index.js';
+import ProviderHandle from '../ProviderHandle/index.js';
 
 function mapStateToProps(state) {
     return {
@@ -19,6 +20,7 @@ const FilterWrapperDiv = styled.div`
     top: 0px;
     right: 25%;
     left: 50%;
+    border-radius: 0px 0px 4px 4px;
     margin-left: -150px;
 `;
 
@@ -26,7 +28,9 @@ class FilterWrapper extends React.Component {
     render() {
         return(
             <FilterWrapperDiv>
-                <Button title="Test title" type="play"/>
+                <ProviderHandle title="Nextbike" id={0}/>
+                <ProviderHandle title="LIDL-Bike" id={1}/>
+                <ProviderHandle title="Mobike" id={2}/>
             </FilterWrapperDiv>
         ) 
     }
