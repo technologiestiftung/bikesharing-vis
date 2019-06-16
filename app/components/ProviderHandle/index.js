@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import classNames from 'classnames';
-import { toggleProvider, setLoaded, toggleUpdate } from '../../../store/actions/index';
+import { toggleProvider, setLoaded, toggleUpdate, setUpdateHistogram } from '../../../store/actions/index';
 
 const ProviderWrapper = styled.span`
     border: 1px solid;
@@ -19,6 +19,11 @@ const ProviderWrapper = styled.span`
         color: ${props => props.theme.colorProvider0};
         transition: all .25s ease;
 
+        &:hover {
+            color: ${props => props.theme.colorPrimary};
+            background: ${props => props.theme.colorProvider0};
+        }
+
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
             background: ${props => props.theme.colorProvider0};
@@ -29,6 +34,11 @@ const ProviderWrapper = styled.span`
         color: ${props => props.theme.colorProvider1};
         transition: all .25s ease;
 
+        &:hover {
+            color: ${props => props.theme.colorPrimary};
+            background: ${props => props.theme.colorProvider1};
+        }
+
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
             background: ${props => props.theme.colorProvider1};
@@ -38,6 +48,11 @@ const ProviderWrapper = styled.span`
     &#mobike {
         color: ${props => props.theme.colorProvider2};
         transition: all .25s ease;
+
+        &:hover {
+            color: ${props => props.theme.colorPrimary};
+            background: ${props => props.theme.colorProvider2};
+        }
 
         &.btn-pressed {
             color: ${props => props.theme.colorPrimary};
@@ -52,7 +67,8 @@ function mapStateToProps(state) {
       time: state.time,
       animate: state.animate,
       vendor: state.vendor,
-      loaded: state.loaded
+      loaded: state.loaded,
+      histogramNeedsUpdate: state.histogramNeedsUpdate
     };
 }
 
@@ -72,15 +88,17 @@ class ProviderHandle extends React.Component {
     }
 
     toggleProviders = () => {
+        this.props.dispatch(setUpdateHistogram(true));
         let providerIncluded = this.props.vendor.includes(this.props.id);
         let providersArray = this.props.vendor;
 
+        
         if (providerIncluded) {
             for ( var i = providersArray.length - 1; i >= 0; i-- ) {
                 if( providersArray[i] === this.props.id ) {
-                   providersArray.splice(i, 1);
-                   this.props.dispatch(toggleProvider(providersArray));
-                   this.props.dispatch(toggleUpdate(true));
+                    providersArray.splice(i, 1);
+                    this.props.dispatch(toggleProvider(providersArray));
+                    this.props.dispatch(toggleUpdate(true));
                 }
             }
         } else {
@@ -88,6 +106,7 @@ class ProviderHandle extends React.Component {
             this.props.dispatch(toggleProvider(providersArray));
             this.props.dispatch(toggleUpdate(true));
         }
+
     }
 
     containsProvider = () => {

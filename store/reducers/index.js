@@ -8,19 +8,24 @@ const initialState = {
     buttonPlay: true,
     buttonPause: false,
     vendor: [0,1],
+    histogramNeedsUpdate: false,
     histogram: null,
-    transitionDuration: 5000,
+    transitionDuration: 1200,
     viewport: {
-        latitude: 52.500869,
-        longitude: 13.419047,
-        zoom: 16,
+        latitude: 52.518566,
+        longitude: 13.385754,
+        zoom: 12,
         pitch: 45,
-        bearing: 0
+        bearing: 0,
+        maxZoom: 19,
+        minZoom: 10,
     },
+    storyId: 0,
+    storyVisible: false,
     provider0: 0,
     provider1: 0,
     provider2: 0,
-    overlayInfo: true,
+    overlayInfo: false,
     barCurrent: null
 }
 
@@ -98,6 +103,14 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'TOGGLE_OVERLAY_INFO') {
         return {...state, overlayInfo: action.payload }
+    }
+
+    if (action.type === 'SET_UPDATE_HISTOGRAM') {
+        return {...state, histogramNeedsUpdate: action.payload }
+    }
+
+    if (action.type === 'SET_STORY_VISIBLE') {
+        return {...state, storyVisible: action.payload }
     }
 
     return state;

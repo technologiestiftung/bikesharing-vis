@@ -47,6 +47,8 @@ export const INITIAL_VIEW_STATE = {
   latitude: 52.500869,
   longitude: 13.419047,
 	zoom: 16,
+	maxZoom: 15,
+  	minZoom: 13,
 	pitch: 45,
 	bearing: 0
 	};
@@ -99,6 +101,10 @@ class DeckGlWrapper extends React.Component {
 		}
 	}
 
+    _onViewportChange = viewport => {
+        console.log('viewport')
+    };
+
 	_onClick(info) {
 		if (info.object) {
 			// eslint-disable-next-line
@@ -127,7 +133,7 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	editViewport(val) {
-		this.props.dispatch(setViewport(val));
+		// console.log(val.viewState);
 	}
 
 	editTime(val) {
@@ -143,28 +149,15 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-
 		if (prevProps.animate == false) {
-			this.state.timePause = this.state.timeCurrent;
+			this.state.timePause = this.props.time;
 			this.state.started = false;
 		} 
 		
 		if (prevProps.animate == true && this.state.started == false) {
-			this.state.timePlay = this.state.timeCurrent;
-
-			// check if offset becomes bigger than total length
-			if (this.state.pause > this.state.play) {
-				this.editTimeOffset(this.state.timePlay);
-			} else {
-				this.editTimeOffset(this.props.timeOffset + (this.state.timePlay - this.state.timePause));
-			}
+			this.state.timePlay = this.props.time;
 
 			this.state.started = true;
-		}
-
-		if (this.state.timePrev > this.props.time) {
-			console.log(`prev: ${this.state.timePrev}, current: ${this.props.time}`)
-			this.editTimeOffset(0);
 		}
 
 		if (this.props.animate !== prevProps.animate) {
@@ -173,17 +166,12 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	_animate() {
-		const {
-		  loopLength = 99999, // unit corresponds to the timestamp in source data
-		  animationSpeed = 1 // unit time per second
-		} = this.props;
+		if (this.props.time > 99999) {
+			this.editTime(0);
+		} else {
+			this.editTime(this.props.time + 20);
+		}
 
-		this.state.frame+= 20 // Date.now() / 1000;
-		const loopTime = loopLength / animationSpeed;
-
-		this.state.timeCurrent = ((this.state.frame % loopTime) / loopTime) * loopLength
-
-		this.editTime(this.state.timeCurrent - this.props.timeOffset);
 
 		if (this.props.animate == true) {
 			this.state.timePrev = this.props.time;
@@ -200,11 +188,11 @@ class DeckGlWrapper extends React.Component {
 				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
 				getColor: (d) => {
 					if(d.vendor === 0) {
-						return [253, 128, 93]
+						return [247,247,247]
 					} else if (d.vendor === 1) {
-						return [23, 184, 190]
+						return [239,138,98]
 					} else if (d.vendor === 2) {
-						return [0, 0, 255]
+						return [103,169,207]
 					}
 				},
 				opacity: 0.8,
@@ -227,12 +215,13 @@ class DeckGlWrapper extends React.Component {
 						initialViewState={this.props.viewport} 
 						viewState={this.props.viewport}
 						controller={true}
-						onViewportChange={this.editViewport}
+						onViewStateChange={this.editViewport}
 				>
 						<StaticMap 
 							mapboxApiAccessToken={MAPBOX_TOKEN} 
 							mapStyle="mapbox://styles/mapbox/dark-v9" 
 							transitionInterpolator={new FlyToInterpolator()}
+							onViewportChange={this.editViewport}
 							captureScroll={false}
 							captureDrag={false}
 							onLoad={this._onload.bind(this)

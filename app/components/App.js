@@ -3,14 +3,15 @@ import DeckGlWrapper from './DeckGL/index';
 import Analyse from './Analyse/index';
 import Filter from './Filter/index';
 import Overlay from './Overlay/index';
+import Slider from './Slider/index';
 import ButtonInfo from './ButtonInfo/index';
 import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
+import Story from './Story/index';
 import { connect } from "react-redux";
 import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
-
 
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -161,7 +162,6 @@ class AppContainer extends React.Component {
                     })
                     tripsByTime.push([index, tripsCount]);
                 }        
-                
                 return tripsByTime;
             }).then(histogramData => {
                 this.props.dispatch(setHistogram(histogramData));
@@ -174,6 +174,8 @@ class AppContainer extends React.Component {
 
     componentDidMount() {
         this.fetchData(this.props.vendor);
+        document.addEventListener('touchstart', event => event.preventDefault());
+        document.addEventListener('contextmenu', event => event.preventDefault());
     }
     
     componentDidUpdate() {
@@ -188,12 +190,13 @@ class AppContainer extends React.Component {
             <ThemeProvider theme={theme}>
                 <div className="app-wrapper">
                     <DeckGlWrapper/>
-                    <Overlay/>
+                    {/* <Overlay/> */}
                     <ButtonInfo/>
                     <Analyse/>
                     <Filter/>
                     <LogoSvg/>
                     <OverlayAbout/>
+                    <Story/>
                 </div>
             </ThemeProvider>
             )

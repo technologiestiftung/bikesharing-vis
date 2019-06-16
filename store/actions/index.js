@@ -14,6 +14,8 @@ import { SET_BAR_CURRENT } from '../constants/action-types';
 import { TOGGLE_PROVIDER } from '../constants/action-types';
 import { TOGGLE_UPDATE } from '../constants/action-types';
 import { TOGGLE_OVERLAY_INFO } from '../constants/action-types';
+import { SET_UPDATE_HISTOGRAM } from '../constants/action-types';
+import { SET_STORY_VISIBLE } from '../constants/action-types';
 
 export function setTime(payload) {
     return { 
@@ -130,6 +132,20 @@ export function toggleUpdate(payload) {
 export function toggleOverlayInfo(payload) {
     return { 
         type: TOGGLE_OVERLAY_INFO, 
+        payload 
+    };
+}
+
+export function setUpdateHistogram(payload) {
+    return { 
+        type: SET_UPDATE_HISTOGRAM, 
+        payload 
+    };
+}
+
+export function setStoryVisible(payload) {
+    return { 
+        type: SET_STORY_VISIBLE, 
         payload 
     };
 }

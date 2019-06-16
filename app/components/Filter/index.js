@@ -14,7 +14,7 @@ function mapStateToProps(state) {
 
 const FilterWrapperDiv = styled.div`
     position: absolute;
-    width: 900px;
+    width: 669px;
     height: 30px;
     padding: 15px;
     background: ${props => props.theme.colorPrimaryDark};
@@ -25,7 +25,7 @@ const FilterWrapperDiv = styled.div`
     display: flex;
     flex-direction: row;
     border-radius: 0px 0px 4px 4px;
-    margin-left: -450px;
+    margin-left: -248px;
 `;
 
 const LabelProvider = styled.div`
@@ -39,12 +39,13 @@ class FilterWrapper extends React.Component {
     render() {
         return(
             <FilterWrapperDiv>
-                <LabelProvider>Provider</LabelProvider>
+                <LabelProvider>Anbieter</LabelProvider>
                 <ProviderHandle title="Nextbike" id={0}/>
                 <ProviderHandle title="LIDL-Bike" id={1}/>
                 <ProviderHandle title="Mobike" id={2}/>
-                <LabelProvider>Stories</LabelProvider>
-                <CameraHandle>Berlin Tiergarten</CameraHandle>
+                <div style={{width: 20 +'px'}}></div>
+                {/* <LabelProvider>Views</LabelProvider> */}
+                <CameraHandle></CameraHandle>
             </FilterWrapperDiv>
         ) 
     }

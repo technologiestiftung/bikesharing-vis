@@ -5,6 +5,7 @@ const LogoSvgStyled = styled.svg`
     left: 15px;
     top: 15px;
     position: absolute;
+    z-index: 1000;
 `;
 
 class LogoSvg extends React.Component {

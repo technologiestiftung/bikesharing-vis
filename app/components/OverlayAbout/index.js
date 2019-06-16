@@ -23,9 +23,10 @@ const OverlayBackground = styled.div`
 
 const OverlayInfoWrapper = styled.div`
     background: ${props => props.theme.colorPrimaryDark};
-    width: 800px;
+    width: 490px;
     opacity: 1;
-    height: 600px;
+    height: 470px;
+    border-radius: 5px;
 
     position:absolute; /*it can be fixed too*/
     left:0; right:0;
@@ -36,6 +37,30 @@ const OverlayInfoWrapper = styled.div`
     max-width:100%;
     max-height:100%;
     overflow:auto;
+
+    font-family: ${props => props.theme.fontFamily};
+    color: white;
+    padding: 30px;
+
+    h3 {
+        margin-top: 0px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    p {
+        opacity: .5;
+        margin: 0;
+        line-height: 150%;
+    }
+`;
+
+const sectionHeadline = styled.h3`
+
+`;
+
+const sectionText = styled.span`
+
 `;
 
 
@@ -50,9 +75,23 @@ class OverlayAbout extends React.Component {
                 <div>
                     <OverlayBackground></OverlayBackground>
                     <OverlayInfoWrapper>
-                        Here comes a project description.
+                        <h3>Über das Projekt</h3>
+                        <p>
+                        Urbane Mobilität verändert sich stetig. Bikesharing wird seit einigen Jahren immer mehr in Großstädten genutzt, um Räder flexibel in der ganzen Stadt ausleihen und abstellen zu können. Wir haben das Phänomen für Berlin genauer untersucht und die Standortdaten aller Räder der Bikesharing-Anbieter Nextbike, LIDL-Bike und Mobike gesammelt.
+
+                        <br/>
+                        <br/>
+
+                        Die Visualisierung zeigt die Nutzung der Angebote für den Zeitraum vom 12. – 13.04.2019. Es werden alle Radbewegungen abgebildet, die größer als 750 Meter sind. So wird sichtbar, zu welchen Uhrzeiten und in welchen Regionen Bikesharing besonders intensiv genutzt wird.
+
+                        <br/>
+                        <br/>
+
+                        (Die abgebildeten Routen können von der eigentlichen Route abweichen, da der Algorithmus den schnellsten Weg zwischen zwei Punkten berechnet).
+                        </p>
+                        <br/>
+                        <ButtonClose/>
                     </OverlayInfoWrapper>
-                    <ButtonClose/>
                 </div>
             )
         } else {

@@ -1,3 +1,7 @@
+body {
+    touch-action: none;
+}
+
 rect.bar {
     opacity: .25;
     transition: all .25s ease;
@@ -8,7 +12,7 @@ rect.bar {
     }
 
     &.active {
-        fill: red;
+        fill: rgb(33, 168, 174);
         opacity: 1;
         transition: all .25s ease;
     }

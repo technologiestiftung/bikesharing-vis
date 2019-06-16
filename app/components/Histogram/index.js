@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from "react-redux";
-import { setBarCurrent } from '../../../store/actions/index'
+import { setBarCurrent, setHistogram, setUpdateHistogram } from '../../../store/actions/index'
+import Slider from '../Slider/index';
 
 import { 
     histogram as d3Histogram,
@@ -15,7 +16,12 @@ const mapStateToProps = function(state) {
     return {
       histogram: state.histogram,
       time: state.time,
-      barCurrent: state.barCurrent
+      barCurrent: state.barCurrent,
+      provider0: state.provider0,
+      provider1: state.provider1,
+      provider2: state.provider2,
+      vendor: state.vendor,
+      histogramNeedsUpdate: state.histogramNeedsUpdate
     }
 }
 
@@ -91,9 +97,17 @@ class Histogram extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.update == true && this.props.histogram != null) { 
+        if (this.state.update && this.props.histogram != null) { 
+            this.updateHistogramData();
             this.init() 
             this.setState({ update: false });
+
+        }
+
+        if (!this.state.update && this.props.histogramNeedsUpdate) {
+            console.log('insode conditional')
+            this.bars
+                .data(this.props.histogram.map((d) => { return d[1]} ))
         }
         
         // highlight histogram bar for current timeslot if histogram data is available
@@ -101,11 +115,16 @@ class Histogram extends React.Component {
             this.highlightedBar = Math.floor(this.histogramDomain(this.props.time));
             
             this.props.dispatch(setBarCurrent(this.highlightedBar));
+
+            this.bars
+                .classed('past', false)
+                .classed('active', false);
+
             
             this.highlightBars()
 
             if (this.props.barCurrent == this.props.histogram.length - 1) {
-                let bars = d3SelectAll('rect.bar')
+                this.bars
                     .classed('past', false)
                     .classed('active', false);
     
@@ -114,13 +133,51 @@ class Histogram extends React.Component {
 
     }
 
-    componentDidMount() {
+    createNestedArray = (length) => {
+        let arr = [];
+        for (let index = 0; index < length; index++) {
+            arr.push([0,0]);
+        };
+
+        return arr;
+    }
+
+    updateHistogramData() {
+        if (this.props.histogramNeedsUpdate) {
+            this.props.dispatch(setUpdateHistogram(false));
+            
+            let providerData = [];
+            let merged = this.createNestedArray(100);
+            
+            
+            this.props.vendor.forEach(vendor => {
+                let data = this.props[`provider${vendor}`];
+                providerData.push(data);
+            })
+    
+            providerData.forEach(provider => {
+                provider.forEach((slot,i) => {
+                    let timestamp = slot[0];
+                    let bikes = slot[1];
+    
+                    merged[i][0] = timestamp;
+                    merged[i][1] += bikes;
+                })
+            })
+    
+            this.props.dispatch(setHistogram(merged));
+        }
+        
 
     }
 
     render() {
         if (this.props.histogram != null) {
-            return <HistogramWrapper id="histogram"></HistogramWrapper>
+            return (
+                <HistogramWrapper id="histogram">
+                    <Slider/> 
+                </HistogramWrapper>
+            )
         } else {
             return (
                 'Loading ... '

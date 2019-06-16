@@ -9,9 +9,9 @@ const theme = {
     timeS: '.125s',
     timeM: '.25s',
     timeL: '.5s',
-    colorProvider0: '#25ACB2',
-    colorProvider1: '#E57657',
-    colorProvider2: '#120EEE',
+    colorProvider0: '#ef8a62',
+    colorProvider1: '#f7f7f7',
+    colorProvider2: '#67a9cf',
 }
 
 export default theme;
