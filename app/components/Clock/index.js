@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { scaleLinear as d3ScaleLinear } from 'd3';
+import { setSelectedDatasetIndex, setSelectedDataset, toggleUpdate } from '../../../store/actions/index';
 
 import styled from 'styled-components';
 
@@ -13,39 +14,59 @@ const TimeWrapper = styled.div`
     font-weight: bold;
 `;
 
+const FlexWrapper = styled.div`
+    display: flex;
+    flex-direction: row:
+`;
+
 const DateType = styled.div`
     color: ${props => props.theme.colorLight};
 `;
 
 function mapStateToProps(state) {
     return {
-      time: state.time
+      time: state.time,
+      timeExtend: state.timeExtend,
+      datasets: state.datasets,
+      selectedDatasetIndex: state.selectedDatasetIndex,
     };
 }
 
 const monthDict = { 
-    3: 'April'
+    3: 'April',
+    4: 'Mai',
+    5: 'Juni',
+    6: 'Juli',
+    7: 'August',
+    8: 'September',
+    9: 'Oktober',
+    10: 'November',
+    11: 'Dezember',
 }
 
 const dayDict = { 
-    5: 'Samstag',
-    6: 'Sonntag'
+    0: 'Mo',
+    1: 'Di',
+    2: 'Mi',
+    3: 'Do',
+    4: 'Fr',
+    5: 'Sa',
+    6: 'So'
 }
-
-const timeFirst = 1555020005777;
-const timeLast = 1555192562992;
 
 function Clock(props) {
 
+    const timeFirst = props.timeExtend[0];
+    const timeLast = props.timeExtend[1];
+
     function currentTime(val) {
+
         const calc = d3ScaleLinear(val)
             .domain([0, 99999])
             .range([timeFirst, timeLast])
 
         const date = new Date(Math.round(calc(val)));
         const hour = Number(date.getHours());
-
-        
         
         const minutes = date.getMinutes();
         const seconds = date.getSeconds();
@@ -58,21 +79,50 @@ function Clock(props) {
         return `${hourTwoDigits}:${minutesTwoDigits}:${secondsTwoDigits}`;
     }
 
-    function currentDate(val) {
+    function currentDate(val, props) {
 
-        const calc = d3ScaleLinear(val)
-            .domain([0, 99999])
-            .range([timeFirst, timeLast])
+        if (props.timeExtend.length > 0) {
+            
+            const calc = d3ScaleLinear(val)
+                .domain([0, 99999])
+                .range([timeFirst, timeLast])
+    
+            const date = new Date(Math.round(calc(val)));
+    
+            const month = monthDict[date.getMonth()];
+            const day = dayDict[date.getDay()];
+            const dateDay = date.getDate();
+    
+            const dateStr = `${day}, ${dateDay} ${month}`
+            
+            return dateStr;
+        }
 
-        const date = new Date(Math.round(calc(val)));
+    }
 
-        const month = monthDict[date.getMonth()];
-        const day = dayDict[date.getDay()];
-        const dateDay = date.getDate();
-
-        const dateStr = `${day}, ${dateDay} ${month}`
+    function handleClick(cmd, props)  {
         
-        return dateStr;
+        if (props.datasets != null) {
+            
+            const datasetsLength = props.datasets.length - 1;
+            
+            if (cmd == 'next') {
+                let oldIndex = props.selectedDatasetIndex;
+                const newIndex = props.selectedDatasetIndex == datasetsLength ? 0 : oldIndex + 1;
+                props.dispatch(toggleUpdate(true));
+                props.dispatch(setSelectedDatasetIndex(newIndex));
+                props.dispatch(setSelectedDataset(props.datasets[props.selectedDatasetIndex][1]));
+            }
+            
+            if (cmd == 'previous') {
+                let oldIndex = props.selectedDatasetIndex;
+                const newIndex = props.selectedDatasetIndex == 0 ? datasetsLength : oldIndex - 1;
+                props.dispatch(toggleUpdate(true));
+                props.dispatch(setSelectedDatasetIndex(newIndex));
+                props.dispatch(setSelectedDataset(props.datasets[props.selectedDatasetIndex][1]));
+            }
+        }
+
     }
 
     function msToTime(s) {
@@ -96,7 +146,29 @@ function Clock(props) {
     return (
         <DateWrapper className="clock-wrapper">
             <TimeWrapper>{currentTime(props.time)}</TimeWrapper>
-            <DateType>{currentDate(props.time)}</DateType>
+            <FlexWrapper>
+                <span onClick={() => handleClick('previous', props)} >
+                    <svg style={{marginRight: 5 + 'px'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                        <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                            <g id="Artboard" transform="translate(-112.000000, -70.000000)" fill="#FFFFFF">
+                                <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-225.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+
+                <span onClick={() => handleClick('next', props) } >
+                    <svg style={{marginRight: 10 + 'px'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                        <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                            <g id="Artboard" transform="translate(-116.000000, -70.000000)" fill="#FFFFFF">
+                                <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-45.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+
+                <DateType>{currentDate(props.time, props)}</DateType>
+            </FlexWrapper>
         </DateWrapper>
     );
 }

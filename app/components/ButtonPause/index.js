@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setButtonPlay, setButtonPause } from '../../../store/actions/index';
+import { setStateDeckGl, setButtonPlay, setButtonPause, setButtonBackward, setButtonForward } from '../../../store/actions/index';
 import classNames from 'classnames';
 
 import styled from "styled-components";
@@ -84,6 +84,8 @@ class ButtonPause extends React.Component {
     }
 
     handleMouseDown = () => {
+        this.props.dispatch(setButtonForward(false));
+        this.props.dispatch(setButtonBackward(false));
         this.props.dispatch(setButtonPlay(false));
         this.props.dispatch(setButtonPause(true));
     }

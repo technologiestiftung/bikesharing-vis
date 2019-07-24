@@ -26,9 +26,14 @@ const mapStateToProps = function(state) {
 }
 
 const HistogramWrapper = styled.div`
-    width: 350px;
+    width: 328px;
     height: 35px;
     margin: 0px 20px 0px 10px;
+    display: block;
+
+    @media screen and (max-width: ${props => props.theme.screenWidthM}) {
+        display: none;
+    }
 `
 
 class Histogram extends React.Component {
@@ -85,6 +90,31 @@ class Histogram extends React.Component {
                 .attr('class', 'bar')
     }
 
+    updateHistogram = () => {
+        const y = d3ScaleLinear()
+            .domain([0, d3Max(this.props.histogram, function(d) { return d[1]; })])
+            .range([0, this.height]);
+
+        this.bars.remove()
+
+
+        const x = d3ScaleLinear()
+        .domain([0,this.props.histogram.length])
+        .range([0, this.width])
+
+        this.bars = this.svg.append('g')
+        .attr('fill', 'white')
+        .selectAll('rect')
+        .data(this.props.histogram.map((d) => { return d[1]} ))
+        .join('rect')
+            .attr('x', (d,i) => { return x(i) + 1 })
+            .attr('width', '1px')
+            .attr('y', d => { return this.height - y(d) })
+            .attr('height', d => { return y(d) })
+            .attr('id', (d,i) => { return `${i}` })
+            .attr('class', 'bar')
+    }
+
     highlightBars() {
         let bars = d3SelectAll('rect.bar')
             .filter((d,i) => { return i < this.props.barCurrent })
@@ -98,16 +128,16 @@ class Histogram extends React.Component {
 
     componentDidUpdate() {
         if (this.state.update && this.props.histogram != null) { 
-            this.updateHistogramData();
-            this.init() 
+            this.props.dispatch(setUpdateHistogram(false));
+            this.init();
             this.setState({ update: false });
+        } else if (!this.state.update && this.props.histogramNeedsUpdate && this.props.histogram != null) {
 
-        }
+            this.props.dispatch(setUpdateHistogram(false));
+            this.updateHistogram();
 
-        if (!this.state.update && this.props.histogramNeedsUpdate) {
-            console.log('insode conditional')
-            this.bars
-                .data(this.props.histogram.map((d) => { return d[1]} ))
+            // this.bars.remove()
+
         }
         
         // highlight histogram bar for current timeslot if histogram data is available
@@ -140,35 +170,6 @@ class Histogram extends React.Component {
         };
 
         return arr;
-    }
-
-    updateHistogramData() {
-        if (this.props.histogramNeedsUpdate) {
-            this.props.dispatch(setUpdateHistogram(false));
-            
-            let providerData = [];
-            let merged = this.createNestedArray(100);
-            
-            
-            this.props.vendor.forEach(vendor => {
-                let data = this.props[`provider${vendor}`];
-                providerData.push(data);
-            })
-    
-            providerData.forEach(provider => {
-                provider.forEach((slot,i) => {
-                    let timestamp = slot[0];
-                    let bikes = slot[1];
-    
-                    merged[i][0] = timestamp;
-                    merged[i][1] += bikes;
-                })
-            })
-    
-            this.props.dispatch(setHistogram(merged));
-        }
-        
-
     }
 
     render() {

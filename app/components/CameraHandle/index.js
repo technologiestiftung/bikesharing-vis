@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setViewport, setTime, toggleProvider, toggleUpdate, setStoryVisible } from '../../../store/actions/index';
+import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, toggleUpdate, setStoryVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
 import { FlyToInterpolator } from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 import styled from "styled-components";
@@ -20,7 +20,8 @@ function mapStateToProps(state) {
       transitionDuration: state.transitionDuration,
       vendor: state.vendor,
       time: state.time,
-      storyVisible: state.storyVisible
+      storyVisible: state.storyVisible,
+      storyId: state.storyId
     };
 }
 
@@ -110,6 +111,36 @@ class CameraHandle extends React.Component {
         },this.props.transitionDuration)
     }
 
+    moveToLinienStr = () => {
+        const linienStr = {
+            latitude: 52.52662696311112,
+            longitude: 13.401849568575383,
+            zoom: 15.022597285291257,
+            pitch: 45,
+            bearing: 0,
+            transitionDuration: this.props.transitionDuration,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionEasing: d3EaseCubic
+        }
+
+        this.props.dispatch(setStateDeckGl(false));
+        this.props.dispatch(setViewport(linienStr));
+        this.props.dispatch(setStoryId(2));
+
+        
+        setTimeout(() => {
+            this.props.dispatch(setAnimationSpeed(100));
+            this.props.dispatch(toggleProvider([0,1]));
+            this.props.dispatch(toggleUpdate(true));  
+            this.props.dispatch(setStateDeckGl(true));
+            this.props.dispatch(setButtonPause(false));
+            this.props.dispatch(setButtonPlay(false));
+            this.props.dispatch(setButtonBackward(false));
+            this.props.dispatch(setButtonForward(true));
+            this.props.dispatch(setStoryVisible(true));
+        },this.props.transitionDuration)
+    }
+
     moveToBerlin = (val) => {
 
         const Berlin = {
@@ -129,19 +160,24 @@ class CameraHandle extends React.Component {
         
         setTimeout(() => {
             this.props.dispatch(setStateDeckGl(true));
+            this.props.dispatch(setButtonPause(false));
+            this.props.dispatch(setButtonPlay(true));
+            this.props.dispatch(setButtonBackward(false));
+            this.props.dispatch(setButtonForward(false));
         },this.props.transitionDuration)
 
-        console.log(this.props);
+        this.props.dispatch(setSbahnVisible(false));
+        this.props.dispatch(setAnimationSpeed(20));
     }
     
-    moveToLongestRide = (val) => {
+    moveToLongestRide = () => {
         const longestRide = {
             altitude: 1.5,
             bearing: 70,
-            latitude: 52.576533183785116,
-            longitude: 13.296013890458365,
+            latitude: 52.554008431213965,
+            longitude: 13.321589665841778,
             pitch: 45,
-            zoom: 10.66808313795351,
+            zoom: 11.094041030143377,
             transitionDuration: this.props.transitionDuration,
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: d3EaseCubic
@@ -150,7 +186,37 @@ class CameraHandle extends React.Component {
         this.props.dispatch(toggleProvider([0]));
         this.props.dispatch(setTime(28369));
         this.props.dispatch(setStateDeckGl(false));
-        this.props.dispatch(toggleUpdate(true));       
+        this.props.dispatch(toggleUpdate(true));   
+
+        this.props.dispatch(setStoryId(0));    
+        
+        setTimeout(() => {
+            this.props.dispatch(setStoryVisible(true));
+        }, this.props.transitionDuration);
+
+        this.props.dispatch(setViewport(longestRide));
+        this.props.dispatch(setSbahnVisible(true));
+    }
+
+    moveToPenaltyZone = () => {
+        const penaltyZone = {
+            altitude: 1.5,
+            bearing: -20,
+            latitude: 52.47217633115334,
+            longitude: 13.409666905999991,
+            zoom: 15.2254480797017,
+            pitch: 45,
+            transitionDuration: this.props.transitionDuration,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionEasing: d3EaseCubic            
+        }
+
+        this.props.dispatch(toggleProvider([0]));
+        this.props.dispatch(setTime(77374));
+        this.props.dispatch(setStateDeckGl(false));
+        this.props.dispatch(toggleUpdate(true));
+
+        this.props.dispatch(setStoryId(1));       
         
         setTimeout(() => {
             this.props.dispatch(setStoryVisible(true));
@@ -158,7 +224,7 @@ class CameraHandle extends React.Component {
 
 
 
-        this.props.dispatch(setViewport(longestRide));
+        this.props.dispatch(setViewport(penaltyZone));
     }
 
     interpolateStates = (timeStart ,timestamp, mark) => {
@@ -182,9 +248,13 @@ class CameraHandle extends React.Component {
         
         return (
             <WrapperOuter>
-                <CameraWrapper onClick={this.moveToBerlin}>Ansicht zurücksetzen</CameraWrapper>
+                <CameraWrapper onClick={this.moveToBerlin}>Reset</CameraWrapper>
                 <div style={{width: 10 +'px'}}></div>
                 <CameraWrapper onClick={this.moveToLongestRide}>Längste Strecke</CameraWrapper>
+                <div style={{width: 10 +'px'}}></div>
+                <CameraWrapper onClick={this.moveToPenaltyZone}>Tempelhof</CameraWrapper>
+                <div style={{width: 10 +'px'}}></div>
+                <CameraWrapper onClick={this.moveToLinienStr}>Linienstr.</CameraWrapper>
             </WrapperOuter>
         );
     }

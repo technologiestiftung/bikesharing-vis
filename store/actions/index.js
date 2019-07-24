@@ -7,6 +7,8 @@ import { SET_DATA } from '../constants/action-types';
 import { SET_HISTOGRAM } from '../constants/action-types';
 import { SET_BUTTON_PLAY } from '../constants/action-types';
 import { SET_BUTTON_PAUSE } from '../constants/action-types';
+import { SET_BUTTON_FORWARD } from '../constants/action-types';
+import { SET_BUTTON_BACKWARD } from '../constants/action-types';
 import { SET_PROVIDER_0 } from '../constants/action-types';
 import { SET_PROVIDER_1 } from '../constants/action-types';
 import { SET_PROVIDER_2 } from '../constants/action-types';
@@ -16,6 +18,20 @@ import { TOGGLE_UPDATE } from '../constants/action-types';
 import { TOGGLE_OVERLAY_INFO } from '../constants/action-types';
 import { SET_UPDATE_HISTOGRAM } from '../constants/action-types';
 import { SET_STORY_VISIBLE } from '../constants/action-types';
+import { SET_STORY_ID } from '../constants/action-types';
+import { SET_SBAHN_VISIBLE } from '../constants/action-types';
+import { SET_ANIMATION_SPEED } from '../constants/action-types';
+import { SET_TIME_EXTEND } from '../constants/action-types';
+import { SET_DATASETS } from '../constants/action-types';
+import { SET_SELECTED_DATASET } from '../constants/action-types';
+import { SET_SELECTED_DATASET_INDEX } from '../constants/action-types';
+
+export function setTimeExtend(payload) {
+    return { 
+        type: SET_TIME_EXTEND, 
+        payload 
+    };
+}
 
 export function setTime(payload) {
     return { 
@@ -87,6 +103,20 @@ export function setButtonPause(payload) {
     };
 }
 
+export function setButtonForward(payload) {
+    return { 
+        type: SET_BUTTON_FORWARD, 
+        payload 
+    };
+}
+
+export function setButtonBackward(payload) {
+    return { 
+        type: SET_BUTTON_BACKWARD, 
+        payload 
+    };
+}
+
 export function setProvider0(payload) {
     return { 
         type: SET_PROVIDER_0, 
@@ -146,6 +176,48 @@ export function setUpdateHistogram(payload) {
 export function setStoryVisible(payload) {
     return { 
         type: SET_STORY_VISIBLE, 
+        payload 
+    };
+}
+
+export function setStoryId(payload) {
+    return { 
+        type: SET_STORY_ID, 
+        payload 
+    };
+}
+
+export function setSbahnVisible(payload) {
+    return { 
+        type: SET_SBAHN_VISIBLE, 
+        payload 
+    };
+}
+
+export function setAnimationSpeed(payload) {
+    return { 
+        type: SET_ANIMATION_SPEED, 
+        payload 
+    };
+}
+
+export function setDatasets(payload) {
+    return { 
+        type: SET_DATASETS, 
+        payload 
+    };
+}
+
+export function setSelectedDataset(payload) {
+    return { 
+        type: SET_SELECTED_DATASET, 
+        payload 
+    };
+}
+
+export function setSelectedDatasetIndex(payload) {
+    return { 
+        type: SET_SELECTED_DATASET_INDEX, 
         payload 
     };
 }

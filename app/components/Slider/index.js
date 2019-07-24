@@ -6,7 +6,7 @@ import { setTime, setStateDeckGl, setButtonPause, setButtonPlay, setTimeOffset }
 const SliderWrapper = styled.div`
     z-index: 1000;
     position: absolute;
-    width: 339px;
+    width: 295px;
 `;
 
 const SliderInput = styled.input`
@@ -52,7 +52,6 @@ class Slider extends React.Component {
 
     onChange = () => {
         const val = parseFloat(event.target.value);
-        console.log(val)
         this.props.dispatch(setTime(val));
         this.props.dispatch(setStateDeckGl(false));
         this.props.dispatch(setButtonPause(true));

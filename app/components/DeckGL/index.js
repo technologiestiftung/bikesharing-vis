@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {MapGL, StaticMap, FlyToInterpolator} from 'react-map-gl';
+import MapGL, {StaticMap, FlyToInterpolator, ScaleControl} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
+import {MapboxLayer} from '@deck.gl/mapbox';
 import {PhongMaterial} from '@luma.gl/core';
 import {AmbientLight, PointLight, LightingEffect} from '@deck.gl/core';
+import { json as d3Json } from 'd3';
 
 import { easeCubic as d3EaseCubic } from 'd3';
 
@@ -14,6 +16,8 @@ import { config } from '../../../config.js';
 
 import { connect } from "react-redux";
 import { setTime, setTimeOffset, setViewport } from '../../../store/actions/index';
+import {fromJS} from 'immutable';
+import { setTimeout } from 'timers';
 
 function mapStateToProps(state) {
   return {
@@ -22,7 +26,9 @@ function mapStateToProps(state) {
 		timeOffset: state.timeOffset,
 		viewport: state.viewport,
 		loaded: state.loaded,
-		data: state.data
+		data: state.data,
+		sbahnVisible: state.sbahnVisible,
+		animationSpeed: state.animationSpeed,
   };
 }
 
@@ -91,6 +97,8 @@ class DeckGlWrapper extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.sbahn = null;
+
 		this.state = {
 			timePause: null,
 			timePlay: null,
@@ -112,28 +120,38 @@ class DeckGlWrapper extends React.Component {
 		}
 	}
 
-	_onload(map) {
-		// const insertBefore = getFirstTextLayerId(map.getStyle());
-		// map.addLayer(new RenderDeckLayerById({id: 'below-labels'}), insertBefore);
-	
-		// map.addLayer({
-		// 	id:"3d-buildings",
-		// 	sourceId:"composite",
-		// 	sourceLayer:"building",
-		// 	// filter: ['==', 'extrude', 'true'],
-		// 	minZoom: 14,
-		// 	'fill-extrusion-color': '#aaa',
-		// 	'fill-extrusion-height': [ 'interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'height'] ], 'fill-extrusion-base': [ 'interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'min_height'] ],
-		// 	'fill-extrusion-opacity': 1,
-		// 	paint: paintLayer
-		// })
-	
-		// Typically goes last
-		// map.addLayer(new RenderRemainingDeckLayers());
+	_onload(evt) {
+		
+		
+		const map = evt.target;
+		const insertBefore = map.getStyle();
+
+		const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
+		
+		map.addLayer({
+			'id': '3d-buildings',
+			'source': 'composite',
+			'source-layer': 'building',
+			'filter': ['==', 'extrude', 'true'],
+			'type': 'fill-extrusion',
+			'minzoom': 0,
+			'paint': {
+			'fill-extrusion-color': '#FFF',			 
+			'fill-extrusion-height': [
+			"interpolate", ["linear"], ["zoom"],
+			15, 0,
+			15.05, ["get", "height"]
+			],
+			'fill-extrusion-base': [
+				"interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "min_height"]
+			],
+			'fill-extrusion-opacity': .3
+			}
+			}, firstLabelLayerId);
 	}
 
 	editViewport(val) {
-		// console.log(val.viewState);
+		console.log(val);
 	}
 
 	editTime(val) {
@@ -144,9 +162,13 @@ class DeckGlWrapper extends React.Component {
 		this.props.dispatch(setTimeOffset(val));
 	}
 
-	componentDidMount() {
-		this._animate();
-	}
+  componentDidMount() {
+	// d3Json('data/Sbahn-Ring.geojson')
+	// 	.then(data => {
+	// 		this._animate();
+	// 		this.sbahn = data;
+	// 	})
+  }
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.animate == false) {
@@ -168,8 +190,10 @@ class DeckGlWrapper extends React.Component {
 	_animate() {
 		if (this.props.time > 99999) {
 			this.editTime(0);
+		} else if(this.props.time < 0) {
+			this.editTime(99999);
 		} else {
-			this.editTime(this.props.time + 20);
+			this.editTime(this.props.time + this.props.animationSpeed);
 		}
 
 
@@ -180,6 +204,8 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	_renderLayers() {
+		const sbahn = this.sbahn;
+
 		return [
 			new TripsLayer({
 				id: 'trips-layer',
@@ -187,20 +213,31 @@ class DeckGlWrapper extends React.Component {
 				// deduct start timestamp from each data point to avoid overflow
 				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
 				getColor: (d) => {
-					if(d.vendor === 0) {
+					if(d.props.providerId == 0) {
 						return [247,247,247]
-					} else if (d.vendor === 1) {
+					} 
+					
+					else if (d.props.providerId == 1) {
 						return [239,138,98]
-					} else if (d.vendor === 2) {
-						return [103,169,207]
 					}
 				},
-				opacity: 0.8,
+				opacity: 1,
 				widthMinPixels: 5,
 				rounded: true,
 				trailLength: 1000,
 				currentTime: this.props.time
 						}),
+			new GeoJsonLayer({
+				id: "3d-buildings",
+				data: sbahn,
+				stroked: true,
+				visible: this.props.sbahnVisible,
+				getDashArray: (data, target) => { return [10, 200] },
+				dashJustified: true,
+				filled: false,
+				getLineColor: [255,255,255],
+				getLineWidth: 20,
+			}),
 		]
 	}
 
@@ -241,7 +278,6 @@ class DeckGlWrapper extends React.Component {
 					initialViewState={this.props.viewport} 
 					viewState={this.props.viewport}
 					controller={true}
-					onViewportChange={this.editViewport}
 			>
 					<StaticMap 
 						mapboxApiAccessToken={MAPBOX_TOKEN} 

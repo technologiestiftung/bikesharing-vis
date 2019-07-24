@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setButtonPlay, setButtonPause } from '../../../store/actions/index';
+import { setStateDeckGl, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonBackward, setButtonForward } from '../../../store/actions/index';
 import classNames from 'classnames';
 
 import styled from "styled-components";
@@ -15,22 +15,18 @@ const ButtonDiv = styled.div`
     padding-right: 13px;
     height: 28px;
     padding-top: 8px;
-    margin-right: 11px;
+    margin-right: 10px;
     transition: background ${props => props.theme.timeS} ease;
-
     polygon {
         fill: color: ${props => props.theme.colorLight};
     }
-
     &.btn-over {
         background: ${props => props.theme.colorLight};
         transition: background ${props => props.theme.timeS} ease;
-
         g#svgShape {
             fill: ${props => props.theme.colorPrimaryDark};
         }
     }
-
     &.btn-pressed {
         background: ${props => props.theme.colorWhite};
         transition: background ${props => props.theme.timeS} ease;
@@ -59,7 +55,6 @@ class ButtonPlay extends React.Component {
 
     animateTrue = () => {
         let nodes = document.querySelectorAll('.btn');
-        nodes[1].classList.remove('btn-pressed');
         this.props.dispatch(setStateDeckGl(true));
     }
 
@@ -82,8 +77,11 @@ class ButtonPlay extends React.Component {
     }
 
     handleMouseDown = () => {
-        this.props.dispatch(setButtonPlay(true));
         this.props.dispatch(setButtonPause(false));
+        this.props.dispatch(setButtonForward(false));
+        this.props.dispatch(setButtonBackward(false));
+        this.props.dispatch(setAnimationSpeed(20));
+        this.props.dispatch(setButtonPlay(true));
     }
 
     render() {

@@ -1,12 +1,14 @@
 const initialState = {
     time: 0,
-    animate: true,
+    animate: false,
     timeOffset: 0,
     data: null,
     loaded: false,
     update: false,
     buttonPlay: true,
     buttonPause: false,
+    buttonForward: false,
+    buttonBackward: false,
     vendor: [0,1],
     histogramNeedsUpdate: false,
     histogram: null,
@@ -26,7 +28,13 @@ const initialState = {
     provider1: 0,
     provider2: 0,
     overlayInfo: false,
-    barCurrent: null
+    barCurrent: null,
+    sbahnVisible: false,
+    animationSpeed: 20,
+    timeExtend: [],
+    datasets: null,
+    selectedDataset: null,
+    selectedDatasetIndex: 0,
 }
 
 function rootReducer(state = initialState, action) {
@@ -39,6 +47,10 @@ function rootReducer(state = initialState, action) {
 
         // es6 way
         return {...state, time: action.payload}
+    }
+
+    if (action.type === 'SET_TIME_EXTEND') {
+        return {...state, timeExtend: action.payload }
     }
 
     if (action.type === 'SET_STATE_DECKGL') {
@@ -71,6 +83,14 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_BUTTON_PLAY') {
         return {...state, buttonPlay: action.payload }
+    }
+
+    if (action.type === 'SET_BUTTON_FORWARD') {
+        return {...state, buttonForward: action.payload }
+    }
+
+    if (action.type === 'SET_BUTTON_BACKWARD') {
+        return {...state, buttonBackward: action.payload }
     }
 
     if (action.type === 'SET_BUTTON_PAUSE') {
@@ -111,6 +131,33 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_STORY_VISIBLE') {
         return {...state, storyVisible: action.payload }
+    }
+
+    if (action.type === 'SET_STORY_ID') {
+        console.log(action.payload);
+        return {...state, storyId: action.payload }
+    }
+
+    if (action.type === 'SET_SBAHN_VISIBLE') {
+        console.log(action.payload);
+        return {...state, sbahnVisible: action.payload }
+    }
+
+    if (action.type === 'SET_ANIMATION_SPEED') {
+        console.log(action.payload);
+        return {...state, animationSpeed: action.payload }
+    }
+
+    if (action.type === 'SET_DATASETS') {
+        return {...state, datasets: action.payload }
+    }
+
+    if (action.type === 'SET_SELECTED_DATASET') {
+        return {...state, selectedDataset: action.payload }
+    }
+
+    if (action.type === 'SET_SELECTED_DATASET_INDEX') {
+        return {...state, selectedDatasetIndex: action.payload }
     }
 
     return state;

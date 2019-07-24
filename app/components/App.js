@@ -9,7 +9,7 @@ import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
 import Story from './Story/index';
 import { connect } from "react-redux";
-import { setTime, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, toggleUpdate } from '../../store/actions/index';
+import { setTime, setDatasets, setStateDeckGl, setSelectedDatasetIndex, setSelectedDataset, setUpdateHistogram, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
 
@@ -27,7 +27,10 @@ const mapStateToProps = function(state) {
       provier1: state.provider1,
       provier2: state.provider2,
       loaded: state.loaded,
-      update: state.update
+      update: state.update,
+      datasets: state.datasets,
+      selectedDataset: state.selectedDataset,
+      selectedDatasetIndex: state.selectedDatasetIndex
     }
 }
 
@@ -37,135 +40,176 @@ import { updateEvents } from 'react-mapbox-gl/lib/map-events';
 class AppContainer extends React.Component {
     
     constructor(props) {
-		super(props);
-    }
-    
+        super(props);
+        
+        this.state = {
+            currentValue: null,
+            currentDataset: null,
+        }
+    }  
     fetchData(vendorId) {
-        d3Json('./data/data_routed_by_trips_merged.json')
-        // uncomment for deployment
-        // d3Json('/projects/bikesharing/data/data_routed_by_trips_merged.json')
-            // count active trips in time and store in separate arrays for each provider
-            .then((data) => {
-
-                let timestampsArr0 = [];
-                let timestampsArr1 = [];
-                let timestampsArr2 = [];
-
-                data.forEach(trip => {
-                    const firstTimestamp = trip.segments[0][2]
-                    const lastTimestamp = trip.segments[trip.segments.length - 1][2]
-
-                    if (trip.vendor == 0) {
-                        timestampsArr0.push([firstTimestamp, lastTimestamp]);
-                    } else if (trip.vendor == 1) {
-                        timestampsArr1.push([firstTimestamp, lastTimestamp]);
-                    } else if (trip.vendor == 2) {
-                        timestampsArr2.push([firstTimestamp, lastTimestamp]);
-                    }
-
-                })
-
-                let tripsByTime0 = [];
-                let tripsByTime1 = [];
-                let tripsByTime2 = [];
+        d3Json(`./datasets.json`)
+            .then((datasets) => {
+                this.props.dispatch(setDatasets(datasets));
+                let currentDataset = this.props.datasets[this.props.selectedDatasetIndex];
+                this.props.dispatch(setSelectedDatasetIndex(this.props.selectedDatasetIndex));
+                this.props.dispatch(setSelectedDataset(currentDataset[1]));
+                
 
 
-                for (let index = 0; index < 99999; index += 1000) {
-                    let tripsCount = 0;
-                    
-                    timestampsArr0.forEach(timestamp => {
-                        if (index > timestamp[0] && index < timestamp[1]) {
-                            tripsCount += 1;
-                        }
-                    })
-                    tripsByTime0.push([index, tripsCount]);
-                }   
+                this.setState({
+                    currentDataset: this.props.selectedDataset
+                });
 
-                for (let index = 0; index < 99999; index += 1000) {
-                    let tripsCount = 0;
-                    
-                    timestampsArr1.forEach(timestamp => {
-                        if (index > timestamp[0] && index < timestamp[1]) {
-                            tripsCount += 1;
-                        }
-                    })
-                    tripsByTime1.push([index, tripsCount]);
-                }   
+                this.loadDataset(vendorId);
 
-                for (let index = 0; index < 99999; index += 1000) {
-                    let tripsCount = 0;
-                    
-                    timestampsArr2.forEach(timestamp => {
-                        if (index > timestamp[0] && index < timestamp[1]) {
-                            tripsCount += 1;
-                        }
-                    })
-                    tripsByTime2.push([index, tripsCount]);
-                }   
-
-                this.props.dispatch(setProvider0(tripsByTime0));
-                this.props.dispatch(setProvider1(tripsByTime1));
-                this.props.dispatch(setProvider2(tripsByTime2));
-
-                return data;
             })
-            // filter data by provider
-            .then((data) => {
-                const selectedVendors = this.props.vendor.length;
+    }
 
-                let filtered;
+    loadDataset = (vendorId) => {
+        let currentDataset = this.props.datasets[this.props.selectedDatasetIndex];
 
-                // filter data by bike vendor
-                if (selectedVendors == 3) {
-                    let filtered = data.filter((d) => { return d.vendor == vendorId[0] || d.vendor == vendorId[1] || d.vendor == vendorId[2]});
-                    this.props.dispatch(setData(filtered));
-                    this.props.dispatch(setLoaded(true));
-                } else if(selectedVendors == 2) {
-                    let filtered = data.filter((d) => { return d.vendor == vendorId[0] || d.vendor == vendorId[1]});
-                    this.props.dispatch(setData(filtered));
-                    this.props.dispatch(setLoaded(true));
-                } else if(selectedVendors == 1) {
-                    let filtered = data.filter((d) => { return d.vendor == vendorId[0]});
-                    this.props.dispatch(setData(filtered));
-                    this.props.dispatch(setLoaded(true));
-                };
+        
+        this.props.dispatch(setSelectedDataset(currentDataset[1]));
+        
+        setTimeout(() => {
 
-                return filtered
-            }).then((data) => {
-                // filter data by active bike trips at the moment
-
-                // 2880 min = 2 days 
-                // 288 * 10 min = 2 days
-                // check every 347 steps how many trips are with in the timeslot
-
-                let timestampsArr = [];
-
-                this.props.data.forEach(trip => {
-                    const firstTimestamp = trip.segments[0][2]
-                    const lastTimestamp = trip.segments[trip.segments.length - 1][2]
-
-                    timestampsArr.push([firstTimestamp, lastTimestamp]);
-                })
-
-                return timestampsArr;
-            }).then(arr => {
-                // count trips for every 10 minutes
-                let tripsByTime = [];
-
-                for (let index = 0; index < 99999; index += 1000) {
-                    let tripsCount = 0;
-                    
-                    arr.forEach(timestamp => {
-                        if (index > timestamp[0] && index < timestamp[1]) {
-                            tripsCount += 1;
-                        }
-                    })
-                    tripsByTime.push([index, tripsCount]);
-                }        
-                return tripsByTime;
-            }).then(histogramData => {
-                this.props.dispatch(setHistogram(histogramData));
-            })
+            d3Json(`./data/${this.props.selectedDataset}`)
+                    // d3Json('./data/data_routed_by_trips_new.json')
+                    // uncomment for deployment
+                    // d3Json(`/projects/bikesharing/data/${latestDataset[1]}`)
+                        // count active trips in time and store in separate arrays for each provider
+                        .then((data) => {
+            
+                            let timestampsArr0 = [];
+                            let timestampsArr1 = [];
+                            let timestampsArr2 = [];
+            
+                            data.forEach(trip => {
+                                const firstTimestamp = trip.segments[0][2]
+                                const lastTimestamp = trip.segments[trip.segments.length - 1][2]
+            
+                                if (trip.props.providerId == 0) {
+                                    timestampsArr0.push([firstTimestamp, lastTimestamp]);
+                                } else if (trip.props.providerId == 1) {
+                                    timestampsArr1.push([firstTimestamp, lastTimestamp]);
+                                } else if (trip.props.providerId == 2) {
+                                    timestampsArr2.push([firstTimestamp, lastTimestamp]);
+                                }
+            
+                            })
+            
+                            let tripsByTime0 = [];
+                            let tripsByTime1 = [];
+                            let tripsByTime2 = [];
+            
+            
+                            for (let index = 0; index < 99999; index += 1000) {
+                                let tripsCount = 0;
+                                
+                                timestampsArr0.forEach(timestamp => {
+                                    if (index > timestamp[0] && index < timestamp[1]) {
+                                        tripsCount += 1;
+                                    }
+                                })
+                                tripsByTime0.push([index, tripsCount]);
+                            }   
+            
+                            for (let index = 0; index < 99999; index += 1000) {
+                                let tripsCount = 0;
+                                
+                                timestampsArr1.forEach(timestamp => {
+                                    if (index > timestamp[0] && index < timestamp[1]) {
+                                        tripsCount += 1;
+                                    }
+                                })
+                                tripsByTime1.push([index, tripsCount]);
+                            }   
+            
+                            for (let index = 0; index < 99999; index += 1000) {
+                                let tripsCount = 0;
+                                
+                                timestampsArr2.forEach(timestamp => {
+                                    if (index > timestamp[0] && index < timestamp[1]) {
+                                        tripsCount += 1;
+                                    }
+                                })
+                                tripsByTime2.push([index, tripsCount]);
+                            }   
+            
+                            this.props.dispatch(setProvider0(tripsByTime0));
+                            this.props.dispatch(setProvider1(tripsByTime1));
+                            // this.props.dispatch(setProvider2(tripsByTime2));
+            
+                            return data;
+                        })
+                        // filter data by provider
+                        .then((data) => {
+                            const selectedVendors = this.props.vendor.length;
+            
+                            let filtered;
+            
+                            // filter data by bike vendor
+    
+                            if(selectedVendors == 2) {
+                                let filtered = data.filter((d) => { return d.props.providerId == vendorId[0] || d.props.providerId == vendorId[1]});
+                                this.props.dispatch(setData(filtered));
+                                this.props.dispatch(setLoaded(true));
+                            } else if(selectedVendors == 1) {
+                                let filtered = data.filter((d) => { return d.props.providerId == vendorId[0]});
+                                this.props.dispatch(setData(filtered));
+                                this.props.dispatch(setLoaded(true));
+                            };
+            
+                            return filtered
+                        }).then((data) => {
+                            // filter data by active bike trips at the moment
+            
+                            // 2880 min = 2 days 
+                            // 288 * 10 min = 2 days
+                            // check every 347 steps how many trips are with in the timeslot
+            
+                            let timestampsArr = [];
+            
+                            let first = 100000000000000, last = 0;
+            
+                            this.props.data.forEach(trip => {
+                                first = Number(trip.props.timeStart) < first ? Number(trip.props.timeStart) : first;
+                                last = Number(trip.props.timeEnd) > last ? Number(trip.props.timeEnd) : last;
+            
+                                const firstTimestamp = trip.segments[0][2]
+                                const lastTimestamp = trip.segments[trip.segments.length - 1][2]
+            
+                                timestampsArr.push([firstTimestamp, lastTimestamp]);
+                            })
+            
+                            this.props.dispatch(setTimeExtend([first, last]));
+            
+            
+                            return timestampsArr;
+                        }).then(arr => {
+                            // count trips for every 10 minutes
+                            let tripsByTime = [];
+            
+                            for (let index = 0; index < 99999; index += 1000) {
+                                let tripsCount = 0;
+                                
+                                arr.forEach(timestamp => {
+                                    if (index > timestamp[0] && index < timestamp[1]) {
+                                        tripsCount += 1;
+                                    }
+                                })
+                                tripsByTime.push([index, tripsCount]);
+                            }        
+                            return tripsByTime;
+                        }).then(histogramData => {
+                            this.props.dispatch(setHistogram(histogramData));
+                            this.props.dispatch(setUpdateHistogram(true));
+                            this.props.dispatch(setStateDeckGl(true));
+                        })
+        }, 250)
+        
+        
     }
 
     filterData = (data) => {
@@ -176,10 +220,14 @@ class AppContainer extends React.Component {
         this.fetchData(this.props.vendor);
         document.addEventListener('touchstart', event => event.preventDefault());
         document.addEventListener('contextmenu', event => event.preventDefault());
+        this.props.dispatch(toggleUpdate(false));
     }
     
     componentDidUpdate() {
         if (this.props.update == true) {
+            this.loadDataset(this.props.vendor);
+            this.props.dispatch(toggleUpdate(false));
+        } else if (this.currentDataset != this.props.selectedDataset && this.props.update == true) {
             this.fetchData(this.props.vendor);
             this.props.dispatch(toggleUpdate(false));
         }
@@ -192,7 +240,7 @@ class AppContainer extends React.Component {
                     <DeckGlWrapper/>
                     {/* <Overlay/> */}
                     <ButtonInfo/>
-                    <Analyse/>
+                    <Analyse data=""/>
                     <Filter/>
                     <LogoSvg/>
                     <OverlayAbout/>

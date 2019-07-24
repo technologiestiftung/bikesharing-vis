@@ -14,7 +14,7 @@ function mapStateToProps(state) {
 
 const FilterWrapperDiv = styled.div`
     position: absolute;
-    width: 669px;
+    width: 750px;
     height: 30px;
     padding: 15px;
     background: ${props => props.theme.colorPrimaryDark};
@@ -24,8 +24,12 @@ const FilterWrapperDiv = styled.div`
     align-items: center;
     display: flex;
     flex-direction: row;
-    border-radius: 0px 0px 4px 4px;
-    margin-left: -248px;
+    border-radius: 0px 0px ${props => props.theme.borderRadius} ${props => props.theme.borderRadius};
+    margin-left: -375px;
+
+    @media screen and (max-width: ${props => props.theme.screenWidthM}) {
+        display: none;
+    }
 `;
 
 const LabelProvider = styled.div`
@@ -42,9 +46,8 @@ class FilterWrapper extends React.Component {
                 <LabelProvider>Anbieter</LabelProvider>
                 <ProviderHandle title="Nextbike" id={0}/>
                 <ProviderHandle title="LIDL-Bike" id={1}/>
-                <ProviderHandle title="Mobike" id={2}/>
                 <div style={{width: 20 +'px'}}></div>
-                {/* <LabelProvider>Views</LabelProvider> */}
+                <LabelProvider>Ansicht</LabelProvider>
                 <CameraHandle></CameraHandle>
             </FilterWrapperDiv>
         ) 

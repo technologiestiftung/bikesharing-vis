@@ -2,7 +2,9 @@ const theme = {
     colorPrimary: '#312F2F',
     colorPrimaryDark: '#222020',
     colorWhite: '#FFFFFF',
-    colorLight: '#4E4C4C',
+    screenWidthM: '1050px',
+    screenWidthS: '600px',
+    colorLight: '#777777',
     fontFamily: 'IBM Plex Sans',
     fontSizeXl: '1.5rem',
     fontSizeL: '.75rem',
@@ -12,6 +14,7 @@ const theme = {
     colorProvider0: '#ef8a62',
     colorProvider1: '#f7f7f7',
     colorProvider2: '#67a9cf',
+    borderRadius: '6px'
 }
 
 export default theme;
