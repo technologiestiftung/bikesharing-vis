@@ -1,4 +1,5 @@
 import React from 'react';
+import styled, { ThemeProvider } from 'styled-components';
 import DeckGlWrapper from './DeckGL/index';
 import Analyse from './Analyse/index';
 import Filter from './Filter/index';
@@ -14,10 +15,34 @@ import store from '../../store/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
 
-
-import styled, { ThemeProvider } from 'styled-components';
-
 import { json as d3Json } from 'd3';
+
+import svg from '../../assets/citylab-logo.svg';
+
+const TsbLinkDiv = styled.div`
+    position: absolute;
+    z-index: 1;
+    bottom: 15px;
+    left: 15px;
+
+    @media screen and (max-width: 1180px) {
+        bottom: 85px;
+    }
+
+    a {
+        display: flex;
+        font-family: ${props => props.theme.fontFamily};
+        flex-direction: column;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+    }
+`;
+
+const LogoImg = styled.img`
+    margin-top: 10px;
+    width: 150px;
+`;
 
 const mapStateToProps = function(state) {
     return {
@@ -74,10 +99,10 @@ class AppContainer extends React.Component {
         
         setTimeout(() => {
 
-                    d3Json(`./data/${this.props.selectedDataset}`)
+                    // d3Json(`./data/${this.props.selectedDataset}`)
                     // d3Json('./data/data_routed_by_trips_new.json')
                     // uncomment for deployment
-                    // d3Json(`/projects/bikesharing/data/${this.props.selectedDataset}`)
+                    d3Json(`/projects/bikesharing/data/${this.props.selectedDataset}`)
                         // count active trips in time and store in separate arrays for each provider
                         .then((data) => {
             
@@ -216,11 +241,24 @@ class AppContainer extends React.Component {
 
     }
 
+    TSBLink() {
+        return <TsbLinkDiv className="link">
+            <a href="https://citylab-berlin.org">
+                <LogoImg src={svg}></LogoImg>
+            </a>
+        </TsbLinkDiv>;
+    }
+
+
     componentDidMount() {
         this.fetchData(this.props.vendor);
         document.addEventListener('touchstart', event => event.preventDefault());
         document.addEventListener('contextmenu', event => event.preventDefault());
         this.props.dispatch(toggleUpdate(false));
+
+        setTimeout(() => {
+            document.querySelector('.mapboxgl-ctrl-bottom-left').remove();
+        }, 150);
     }
     
     componentDidUpdate() {
@@ -265,6 +303,7 @@ class AppContainer extends React.Component {
                         <OverlayAbout/>
                         <Story/>
                     </div>
+                    {this.TSBLink()}
                 </div>
             </ThemeProvider>
             )

@@ -151,7 +151,7 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	editViewport(val) {
-		console.log(val);
+		// console.log(val);
 	}
 
 	editTime(val) {
@@ -252,6 +252,7 @@ class DeckGlWrapper extends React.Component {
 							onViewportChange={this.editViewport}
 							captureScroll={false}
 							captureDrag={false}
+							attributionControl={false}
 							onLoad={this._onload.bind(this)
 							}
 						/>
@@ -275,6 +276,7 @@ class DeckGlWrapper extends React.Component {
 						mapStyle="mapbox://styles/mapbox/dark-v9" 
 						transitionInterpolator={new FlyToInterpolator()}
 						captureScroll={false}
+						attributionControl={false}
 						captureDrag={false}
 						onLoad={this._onload.bind(this)}
 					/>
