@@ -51,8 +51,10 @@ const AnalyseWrapperDiv = styled.div`
     @media screen and (max-width: ${props => props.theme.screenWidthM}) {
         width: 100%;
         left: 0;
-        right: 0;
         height: 40px;
+        padding-left: 0;
+        display: flex;
+        justify-content: center;
         margin-left: 0;
     }
 `;

@@ -14,7 +14,7 @@ function mapStateToProps(state) {
 
 const FilterWrapperDiv = styled.div`
     position: absolute;
-    width: 750px;
+    width: 710px;
     height: 30px;
     padding: 15px;
     background: ${props => props.theme.colorPrimaryDark};
@@ -25,7 +25,7 @@ const FilterWrapperDiv = styled.div`
     display: flex;
     flex-direction: row;
     border-radius: 0px 0px ${props => props.theme.borderRadius} ${props => props.theme.borderRadius};
-    margin-left: -375px;
+    margin-left: -355px;
 
     @media screen and (max-width: ${props => props.theme.screenWidthM}) {
         display: none;

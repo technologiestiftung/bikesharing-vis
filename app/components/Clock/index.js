@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { scaleLinear as d3ScaleLinear } from 'd3';
-import { setSelectedDatasetIndex, setSelectedDataset, toggleUpdate } from '../../../store/actions/index';
+import { setSelectedDatasetIndex, setAnimationSpeed, setButtonBackward, setButtonForward, setButtonPause, setButtonPlay, setSelectedDataset, toggleUpdate } from '../../../store/actions/index';
 
 import styled from 'styled-components';
 
@@ -45,13 +45,13 @@ const monthDict = {
 }
 
 const dayDict = { 
-    0: 'Mo',
-    1: 'Di',
-    2: 'Mi',
-    3: 'Do',
-    4: 'Fr',
-    5: 'Sa',
-    6: 'So'
+    1: 'Mo',
+    2: 'Di',
+    3: 'Mi',
+    4: 'Do',
+    5: 'Fr',
+    6: 'Sa',
+    0: 'So'
 }
 
 function Clock(props) {
@@ -112,6 +112,11 @@ function Clock(props) {
                 props.dispatch(toggleUpdate(true));
                 props.dispatch(setSelectedDatasetIndex(newIndex));
                 props.dispatch(setSelectedDataset(props.datasets[props.selectedDatasetIndex][1]));
+                props.dispatch(setButtonBackward(false));
+                props.dispatch(setButtonPause(false));
+                props.dispatch(setButtonPlay(true));
+                props.dispatch(setButtonForward(false));
+                props.dispatch(setAnimationSpeed(20));
             }
             
             if (cmd == 'previous') {
@@ -120,6 +125,11 @@ function Clock(props) {
                 props.dispatch(toggleUpdate(true));
                 props.dispatch(setSelectedDatasetIndex(newIndex));
                 props.dispatch(setSelectedDataset(props.datasets[props.selectedDatasetIndex][1]));
+                props.dispatch(setButtonBackward(false));
+                props.dispatch(setButtonPause(false));
+                props.dispatch(setButtonPlay(true));
+                props.dispatch(setButtonForward(false));
+                props.dispatch(setAnimationSpeed(20));
             }
         }
 
@@ -148,7 +158,7 @@ function Clock(props) {
             <TimeWrapper>{currentTime(props.time)}</TimeWrapper>
             <FlexWrapper>
                 <span onClick={() => handleClick('previous', props)} >
-                    <svg style={{marginRight: 5 + 'px'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                    <svg style={{marginRight: 5 + 'px', cursor: 'pointer'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                             <g id="Artboard" transform="translate(-112.000000, -70.000000)" fill="#FFFFFF">
                                 <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-225.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>
@@ -158,7 +168,7 @@ function Clock(props) {
                 </span>
 
                 <span onClick={() => handleClick('next', props) } >
-                    <svg style={{marginRight: 10 + 'px'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                    <svg style={{marginRight: 10 + 'px', cursor: 'pointer'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                             <g id="Artboard" transform="translate(-116.000000, -70.000000)" fill="#FFFFFF">
                                 <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-45.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>

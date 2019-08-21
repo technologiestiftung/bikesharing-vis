@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 import { setTime, setDatasets, setStateDeckGl, setSelectedDatasetIndex, setSelectedDataset, setUpdateHistogram, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
+import MetaTags from 'react-meta-tags';
+
 
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -55,8 +57,6 @@ class AppContainer extends React.Component {
                 this.props.dispatch(setSelectedDatasetIndex(this.props.selectedDatasetIndex));
                 this.props.dispatch(setSelectedDataset(currentDataset[1]));
                 
-
-
                 this.setState({
                     currentDataset: this.props.selectedDataset
                 });
@@ -74,10 +74,10 @@ class AppContainer extends React.Component {
         
         setTimeout(() => {
 
-            d3Json(`./data/${this.props.selectedDataset}`)
+                    d3Json(`./data/${this.props.selectedDataset}`)
                     // d3Json('./data/data_routed_by_trips_new.json')
                     // uncomment for deployment
-                    // d3Json(`/projects/bikesharing/data/${latestDataset[1]}`)
+                    // d3Json(`/projects/bikesharing/data/${this.props.selectedDataset}`)
                         // count active trips in time and store in separate arrays for each provider
                         .then((data) => {
             
@@ -236,15 +236,35 @@ class AppContainer extends React.Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <div className="app-wrapper">
-                    <DeckGlWrapper/>
-                    {/* <Overlay/> */}
-                    <ButtonInfo/>
-                    <Analyse data=""/>
-                    <Filter/>
-                    <LogoSvg/>
-                    <OverlayAbout/>
-                    <Story/>
+                <div>
+                    <MetaTags>
+                        <title>Bike sharing flows</title>
+                        <meta name="description" content="Berlins täglichen zeitlichen und räumlichen Mobilitätsströme der Bikesharing-Anbieter LIDL-Bike und Next-Bike visualisiert." />
+                        <meta property="og:title" content="Bike sharing flows" />
+                        <meta property="og:type" content="website" />
+                        <meta property="og:image" content="https://fabiandinklage.com/projects/bikesharing/social_media.jpg" />
+                        <meta property="article:author" content="Fabian Dinklage" />
+                        <meta name="twitter:card" content="summary" />
+                        <meta name="twitter:site" content="@TSBBerlin" />
+                        <meta name="twitter:creator" content="@fdnklg" />
+                        <meta name="twitter:url" content="https://fabiandinklage.com/projects/bikesharing/" />
+                        <meta name="twitter:title" content="Bike sharing flows" />
+                        <meta name="twitter:description" content="Berlins täglichen zeitlichen und räumlichen Mobilitätsströme der Bikesharing-Anbieter LIDL-Bike und Next-Bike visualisiert." />
+                        <meta name="twitter:image" content="https://fabiandinklage.com/projects/bikesharing/social_media.jpg" />
+                        <meta itemProp="name" content="Bike sharing flows" />
+                        <meta itemProp="description" content="Berlins täglichen zeitlichen und räumlichen Mobilitätsströme der Bikesharing-Anbieter LIDL-Bike und Next-Bike visualisiert." />
+                        <meta itemProp="image" content="https://fabiandinklage.com/projects/bikesharing/social_media.jpg" />
+                    </MetaTags>
+                    <div className="app-wrapper">
+                        <DeckGlWrapper/>
+                        {/* <Overlay/> */}
+                        <ButtonInfo/>
+                        <Analyse data=""/>
+                        <Filter/>
+                        <LogoSvg/>
+                        <OverlayAbout/>
+                        <Story/>
+                    </div>
                 </div>
             </ThemeProvider>
             )

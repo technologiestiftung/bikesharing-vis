@@ -65,7 +65,7 @@ const OverlayInfoWrapper = styled.div`
     }
 
     p {
-        opacity: .5;
+        opacity: .75;
         margin: 0;
         line-height: 150%;
     }
@@ -75,6 +75,18 @@ const OverlayInfoWrapper = styled.div`
         width: auto;
         padding-bottom: 160px;
     }
+`;
+
+const ProviderLidl = styled.span`
+    color: #E68661;
+    opacity: 1 !important;
+    font-weight: 600;
+`;
+
+const ProviderNext = styled.span`
+    color: white;
+    opacity: 1 !important;
+    font-weight: 600;
 `;
 
 const sectionHeadline = styled.h3`
@@ -114,7 +126,7 @@ class OverlayAbout extends React.Component {
 
                         <AboutTitle>Über das Projekt</AboutTitle>
                         <p>
-                        Urbane Mobilität verändert sich stetig. Bikesharing wird seit einigen Jahren immer mehr in Großstädten genutzt, um Räder flexibel in der ganzen Stadt ausleihen und abstellen zu können. Wir haben das Phänomen für Berlin genauer untersucht und die Standortdaten aller Räder der Bikesharing-Anbieter Nextbike und LIDL-Bike gesammelt.
+                        Urbane Mobilität verändert sich stetig. Bikesharing wird seit einigen Jahren immer mehr in Großstädten genutzt, um Räder flexibel in der ganzen Stadt ausleihen und abstellen zu können. Wir haben das Phänomen für Berlin genauer untersucht und die Standortdaten aller Räder der Bikesharing-Anbieter <ProviderNext>Nextbike</ProviderNext> und <ProviderLidl>LIDL-Bike</ProviderLidl> gesammelt.
 
                         <br/>
                         <br/>

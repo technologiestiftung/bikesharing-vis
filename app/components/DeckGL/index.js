@@ -162,14 +162,6 @@ class DeckGlWrapper extends React.Component {
 		this.props.dispatch(setTimeOffset(val));
 	}
 
-  componentDidMount() {
-	// d3Json('data/Sbahn-Ring.geojson')
-	// 	.then(data => {
-	// 		this._animate();
-	// 		this.sbahn = data;
-	// 	})
-  }
-
 	componentDidUpdate(prevProps) {
 		if (prevProps.animate == false) {
 			this.state.timePause = this.props.time;
@@ -210,7 +202,6 @@ class DeckGlWrapper extends React.Component {
 			new TripsLayer({
 				id: 'trips-layer',
 				data: this.props.data,
-				// deduct start timestamp from each data point to avoid overflow
 				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
 				getColor: (d) => {
 					if(d.props.providerId == 0) {

@@ -129,14 +129,13 @@ class CameraHandle extends React.Component {
 
         
         setTimeout(() => {
-            this.props.dispatch(setAnimationSpeed(100));
             this.props.dispatch(toggleProvider([0,1]));
             this.props.dispatch(toggleUpdate(true));  
             this.props.dispatch(setStateDeckGl(true));
             this.props.dispatch(setButtonPause(false));
-            this.props.dispatch(setButtonPlay(false));
+            this.props.dispatch(setButtonPlay(true));
             this.props.dispatch(setButtonBackward(false));
-            this.props.dispatch(setButtonForward(true));
+            this.props.dispatch(setButtonForward(false));
             this.props.dispatch(setStoryVisible(true));
         },this.props.transitionDuration)
     }
@@ -144,9 +143,9 @@ class CameraHandle extends React.Component {
     moveToBerlin = (val) => {
 
         const Berlin = {
-            latitude: 52.518566,
-            longitude: 13.385754,
-            zoom: 12,
+            latitude: 52.50707714655106,
+            longitude: 13.390768001568283,
+            zoom: 12.586449081940776,
             pitch: 45,
             bearing: 0,
             transitionDuration: this.props.transitionDuration,
@@ -211,20 +210,23 @@ class CameraHandle extends React.Component {
             transitionEasing: d3EaseCubic            
         }
 
-        this.props.dispatch(toggleProvider([0]));
-        this.props.dispatch(setTime(77374));
-        this.props.dispatch(setStateDeckGl(false));
-        this.props.dispatch(toggleUpdate(true));
 
-        this.props.dispatch(setStoryId(1));       
+        this.props.dispatch(setStateDeckGl(false));
+        this.props.dispatch(setViewport(penaltyZone));
+        this.props.dispatch(setStoryId(1));
+
         
         setTimeout(() => {
+            this.props.dispatch(toggleProvider([0,1]));
+            this.props.dispatch(toggleUpdate(true));  
+            this.props.dispatch(setStateDeckGl(true));
+            this.props.dispatch(setButtonPause(false));
+            this.props.dispatch(setButtonPlay(true));
+            this.props.dispatch(setButtonBackward(false));
+            this.props.dispatch(setButtonForward(false));
             this.props.dispatch(setStoryVisible(true));
-        }, this.props.transitionDuration);
+        },this.props.transitionDuration)
 
-
-
-        this.props.dispatch(setViewport(penaltyZone));
     }
 
     interpolateStates = (timeStart ,timestamp, mark) => {
@@ -250,11 +252,9 @@ class CameraHandle extends React.Component {
             <WrapperOuter>
                 <CameraWrapper onClick={this.moveToBerlin}>Reset</CameraWrapper>
                 <div style={{width: 10 +'px'}}></div>
-                <CameraWrapper onClick={this.moveToLongestRide}>Längste Strecke</CameraWrapper>
+                <CameraWrapper onClick={this.moveToPenaltyZone}>Leihradfreie Zonen</CameraWrapper>
                 <div style={{width: 10 +'px'}}></div>
-                <CameraWrapper onClick={this.moveToPenaltyZone}>Tempelhof</CameraWrapper>
-                <div style={{width: 10 +'px'}}></div>
-                <CameraWrapper onClick={this.moveToLinienStr}>Linienstr.</CameraWrapper>
+                <CameraWrapper onClick={this.moveToLinienStr}>Fahrradstraßen</CameraWrapper>
             </WrapperOuter>
         );
     }

@@ -82,8 +82,7 @@ class ProviderHandle extends React.Component {
 
         this.provider = [
             'nextbike',
-            'lidlbike',
-            'mobike'
+            'lidlbike'
         ]
     }
 
@@ -95,7 +94,7 @@ class ProviderHandle extends React.Component {
         
         if (providerIncluded) {
             for ( var i = providersArray.length - 1; i >= 0; i-- ) {
-                if( providersArray[i] === this.props.id ) {
+                if( providersArray[i] === this.props.id && providersArray.length > 1 ) {
                     providersArray.splice(i, 1);
                     this.props.dispatch(toggleProvider(providersArray));
                     this.props.dispatch(toggleUpdate(true));
