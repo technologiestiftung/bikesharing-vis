@@ -4,7 +4,7 @@ import DeckGlWrapper from './DeckGL/index';
 import Analyse from './Analyse/index';
 import Filter from './Filter/index';
 import Overlay from './Overlay/index';
-import Slider from './Slider/index';
+import Sidebar from './Sidebar/index';
 import ButtonInfo from './ButtonInfo/index';
 import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
@@ -99,10 +99,10 @@ class AppContainer extends React.Component {
         
         setTimeout(() => {
 
-                    // d3Json(`./data/${this.props.selectedDataset}`)
+                    d3Json(`./data/${this.props.selectedDataset}`)
                     // d3Json('./data/data_routed_by_trips_new.json')
                     // uncomment for deployment
-                    d3Json(`/projects/bikesharing/data/${this.props.selectedDataset}`)
+                        // d3Json(`/projects/bikesharing/data/${this.props.selectedDataset}`)
                         // count active trips in time and store in separate arrays for each provider
                         .then((data) => {
             
@@ -121,7 +121,6 @@ class AppContainer extends React.Component {
                                 } else if (trip.props.providerId == 2) {
                                     timestampsArr2.push([firstTimestamp, lastTimestamp]);
                                 }
-            
                             })
             
                             let tripsByTime0 = [];
@@ -295,7 +294,7 @@ class AppContainer extends React.Component {
                     </MetaTags>
                     <div className="app-wrapper">
                         <DeckGlWrapper/>
-                        {/* <Overlay/> */}
+                        <Sidebar/>
                         <ButtonInfo/>
                         <Analyse data=""/>
                         <Filter/>

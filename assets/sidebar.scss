@@ -1,0 +1,29 @@
+.sidebar {
+    z-index: 3;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 320px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background: $colorPrimary;
+    color: white;
+
+    .tile {
+        width: 300px;
+        border-radius: $borderRadiusS;
+    }
+
+    .navigation {
+        margin-top: 40px;
+        overflow: auto;
+        height: auto;
+        width: 300px;
+        align-items: inherit;
+        display: flex;
+    }
+}
