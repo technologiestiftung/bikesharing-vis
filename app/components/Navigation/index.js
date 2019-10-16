@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from "react-redux";
 import {render} from 'react-dom';
 
+import Clock from '../Clock/index';
+
 import ProviderHandle from '../ProviderHandle/index.js';
 import ButtonPlay from '../ButtonPlay/index.js';
 import ButtonPause from '../ButtonPause/index.js';
@@ -32,14 +34,20 @@ class Navigation extends React.Component {
             <div className="navigation">
 
                 <div className="flex-wrapper">
-                    <ButtonPause/>
-                    <ButtonPlay/>
+                    <Clock/>
                 </div>
 
-                <ProviderHandle title="Nextbike" id={0}/>
-                <ProviderHandle title="LIDL-Bike" id={1}/>
+                <div className="flex-wrapper mt-s">                    
+                    <div className="flex-wrapper">
+                        <ButtonPlay/>
+                        <ButtonPause/>
+                    </div>
 
-                <ButtonInfo/>
+                    <div className="flex-wrapper">
+                        <ProviderHandle title="Nextbike" id={0}/>
+                        <ProviderHandle title="LIDL-Bike" id={1}/>
+                    </div>
+                </div>
             </div>
         )
     }

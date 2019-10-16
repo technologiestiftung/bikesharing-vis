@@ -10,7 +10,7 @@ import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
 import Story from './Story/index';
 import { connect } from "react-redux";
-import { setTime, setDatasets, setStateDeckGl, setSelectedDatasetIndex, setSelectedDataset, setUpdateHistogram, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, setTimeExtend, toggleUpdate } from '../../store/actions/index';
+import { setTime, setDatasets, setStateDeckGl, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setUpdateHistogram, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import store from '../../store/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
@@ -57,7 +57,8 @@ const mapStateToProps = function(state) {
       update: state.update,
       datasets: state.datasets,
       selectedDataset: state.selectedDataset,
-      selectedDatasetIndex: state.selectedDatasetIndex
+      selectedDatasetIndex: state.selectedDatasetIndex,
+      districtsData: state.districtsData,
     }
 }
 
@@ -75,6 +76,10 @@ class AppContainer extends React.Component {
         }
     }  
     fetchData(vendorId) {
+
+        let datasetsDay;
+        let datasetsDistricts;
+
         d3Json(`./datasets.json`)
             .then((datasets) => {
                 this.props.dispatch(setDatasets(datasets));
@@ -88,6 +93,13 @@ class AppContainer extends React.Component {
 
                 this.loadDataset(vendorId);
 
+            })
+            .then(() => {
+                d3Json(`./data/${this.props.selectedDataset.replace('trails', 'districts')}`)
+                .then((districtsData => {
+                    this.props.dispatch(setDistrictsMetadata(districtsData.summary));
+                    this.props.dispatch(setDistrictsData(districtsData));
+                }))
             })
     }
 
@@ -294,10 +306,10 @@ class AppContainer extends React.Component {
                     </MetaTags>
                     <div className="app-wrapper">
                         <DeckGlWrapper/>
-                        <Sidebar/>
+                        <Sidebar data={this.props.districtsData}/>
                         <ButtonInfo/>
-                        <Analyse data=""/>
-                        <Filter/>
+                        {/* <Analyse data=""/> */}
+                        {/* <Filter/> */}
                         <LogoSvg/>
                         <OverlayAbout/>
                         <Story/>

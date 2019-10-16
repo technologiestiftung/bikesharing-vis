@@ -11,7 +11,8 @@ const DateWrapper = styled.div`
 `;
 
 const TimeWrapper = styled.div`
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 600;
 `;
 
 const FlexWrapper = styled.div`
@@ -20,7 +21,9 @@ const FlexWrapper = styled.div`
 `;
 
 const DateType = styled.div`
-    color: ${props => props.theme.colorLight};
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
 `;
 
 function mapStateToProps(state) {
@@ -157,6 +160,7 @@ function Clock(props) {
         <DateWrapper className="clock-wrapper">
             <TimeWrapper>{currentTime(props.time)}</TimeWrapper>
             <FlexWrapper>
+
                 <span onClick={() => handleClick('previous', props)} >
                     <svg style={{marginRight: 5 + 'px', cursor: 'pointer'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -178,6 +182,7 @@ function Clock(props) {
                 </span>
 
                 <DateType>{currentDate(props.time, props)}</DateType>
+
             </FlexWrapper>
         </DateWrapper>
     );

@@ -4,6 +4,7 @@ import {render} from 'react-dom';
 import styled from 'styled-components';
 
 import DistrictsChart from '../DistrictsChart/index';
+import Overview from '../Overview/index';
 import Navigation from '../Navigation/index';
 
 function mapStateToProps(state) {
@@ -41,14 +42,15 @@ class Sidebar extends React.Component {
             const districtData = keys.map((districtName,i) => {
                 if (districtName != 'summary') {
                     const districtData = this.props.data[districtName];
-                    return (<DistrictsChart type="start" max={this.props.districtsMetadata.maxTripsStart} data={districtData} name={districtName} key={i} id={`district-${i}`} />)
+                    // return (<DistrictsChart type="start" max={this.props.districtsMetadata.maxTripsStart} data={districtData} name={districtName} key={i} id={`district-${i}`} />)
                 }
             })
 
             return (
                 <div className="sidebar">
                     <Navigation />
-                    {districtData}   set real line chart here later
+                    <Overview data={this.props.districtsMetadata}/>
+                    {districtData}
                 </div>
             )
         }

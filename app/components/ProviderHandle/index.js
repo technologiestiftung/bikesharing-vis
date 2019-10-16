@@ -5,58 +5,48 @@ import classNames from 'classnames';
 import { toggleProvider, setLoaded, toggleUpdate, setUpdateHistogram } from '../../../store/actions/index';
 
 const ProviderWrapper = styled.span`
-    border: 1px solid;
+    border: 3px solid;
     font-family: ${props => props.theme.fontFamily};
-    color: ${props => props.theme.colorLight};
-    border-radius: 6px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .25px;
     cursor: pointer;
     height: 20px;
-    padding: 2px 6px 3px 6px;
-    margin-right: 10px;
+    padding: 4px 8px 4px 8px;
     transition: all .25s ease;
+    margin-left: 10px;
 
     &#lidlbike {
-        color: ${props => props.theme.colorProvider0};
+        color: rgba(239, 138,98,.5);
+        width: 67px;
+        background: rgba(239, 138,98,.1)
         transition: all .25s ease;
 
         &:hover {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider0};
+            color: rgba(239, 138,98,.5);
+            background: rgba(239, 138,98,.2);
         }
 
         &.btn-pressed {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider0};
+            color: rgba(239, 138,98,1);
+            background: rgba(239, 138,98,.3);
             transition: all .25s ease;
         }
     }
     &#nextbike {
-        color: ${props => props.theme.colorProvider1};
+        color: rgba(255,255,255,.5);
+        background: rgba(255,255,255,.1)
         transition: all .25s ease;
 
         &:hover {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider1};
+            color: rgba(255,255,255,.5);
+            background: rgba(255,255,255,.2);
         }
 
         &.btn-pressed {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider1};
-            transition: all .25s ease;
-        }
-    }
-    &#mobike {
-        color: ${props => props.theme.colorProvider2};
-        transition: all .25s ease;
-
-        &:hover {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider2};
-        }
-
-        &.btn-pressed {
-            color: ${props => props.theme.colorPrimary};
-            background: ${props => props.theme.colorProvider2};
+            color: rgba(255,255,255,1);
+            background: rgba(255,255,255,.3);
             transition: all .25s ease;
         }
     }

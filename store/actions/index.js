@@ -25,6 +25,8 @@ import { SET_TIME_EXTEND } from '../constants/action-types';
 import { SET_DATASETS } from '../constants/action-types';
 import { SET_SELECTED_DATASET } from '../constants/action-types';
 import { SET_SELECTED_DATASET_INDEX } from '../constants/action-types';
+import { SET_DISTRICTS_METADATA } from '../constants/action-types';
+import { SET_DISTRICTS_DATA } from '../constants/action-types';
 
 export function setTimeExtend(payload) {
     return { 
@@ -35,14 +37,14 @@ export function setTimeExtend(payload) {
 
 export function setTime(payload) {
     return { 
-        type: SET_TIME, 
+        type: SET_TIME,
         payload 
     };
 }
 
 export function setStateDeckGl(payload) {
     return { 
-        type: SET_STATE_DECKGL, 
+        type: SET_STATE_DECKGL,
         payload 
     };
 }
@@ -113,6 +115,20 @@ export function setButtonForward(payload) {
 export function setButtonBackward(payload) {
     return { 
         type: SET_BUTTON_BACKWARD, 
+        payload 
+    };
+}
+
+export function setDistrictsMetadata(payload) {
+    return { 
+        type: SET_DISTRICTS_METADATA, 
+        payload 
+    };
+}
+
+export function setDistrictsData(payload) {
+    return { 
+        type: SET_DISTRICTS_DATA, 
         payload 
     };
 }

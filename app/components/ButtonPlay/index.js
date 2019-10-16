@@ -6,30 +6,38 @@ import classNames from 'classnames';
 import styled from "styled-components";
 
 const ButtonDiv = styled.div`
-    border: 1px solid;
+    border: 3px solid rgba(255,255,255,.5);;
     font-family: ${props => props.theme.fontFamily};
-    color: ${props => props.theme.colorLight};
-    border-radius: 4px;
+    color: rgba(255,255,255,.5);
+    border-radius: 100px;
     cursor: pointer;
-    padding-left: 13px;
-    padding-right: 13px;
-    height: 28px;
-    padding-top: 8px;
-    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 24px;
+    padding-top: 3px;
+    margin-right: 5px;
     transition: background ${props => props.theme.timeS} ease;
-    polygon {
-        fill: color: ${props => props.theme.colorLight};
-    }
+
     &.btn-over {
-        background: ${props => props.theme.colorLight};
-        transition: background ${props => props.theme.timeS} ease;
+        background: rgba(255,255,255,.2);
+        border: 3px solid rgba(255,255,255,.5);
+        transition: all ${props => props.theme.timeS} ease;
+
         g#svgShape {
-            fill: ${props => props.theme.colorPrimaryDark};
+            fill: rgba(255,255,255,.5);
+            transition: all ${props => props.theme.timeS} ease;
         }
     }
+
     &.btn-pressed {
-        background: ${props => props.theme.colorWhite};
+        background: rgba(255,255,255,.2);
+        border: 3px solid rgba(255,255,255,1);
         transition: background ${props => props.theme.timeS} ease;
+
+        g#svgShape {
+            fill: rgba(255,255,255,1);
+            transition: all ${props => props.theme.timeS} ease;
+        }
     }
 `;
 
@@ -99,9 +107,9 @@ class ButtonPlay extends React.Component {
                 onMouseLeave={this.handleMouseLeave}
                 onMouseDown={this.handleMouseDown}
             >
-                <svg width="11px" height="14px" viewBox="0 0 11 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <svg width="7px" height="10px" viewBox="0 0 11 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                        <g id="svgShape" transform="translate(-694.000000, -988.000000)" fill="#4E4C4C">
+                        <g id="svgShape" transform="translate(-694.000000, -988.000000)" fill="rgba(255,255,255,.5)">
                             <g id="Group-13" transform="translate(676.000000, 973.105951)">
                                 <polygon id="Rectangle-Copy-11" transform="translate(20.000000, 22.000000) rotate(-315.000000) translate(-20.000000, -22.000000) " points="14 18.5768468 26 16 23.4231532 28 18.7115766 23.2884234"></polygon>
                             </g>

@@ -34,7 +34,9 @@ const initialState = {
     timeExtend: [],
     datasets: null,
     selectedDataset: null,
-    selectedDatasetIndex: 0,
+    selectedDatasetIndex: 18,
+    districtsMetadata: null,
+    districtsData: null
 }
 
 function rootReducer(state = initialState, action) {
@@ -47,6 +49,14 @@ function rootReducer(state = initialState, action) {
 
         // es6 way
         return {...state, time: action.payload}
+    }
+
+    if (action.type === 'SET_DISTRICTS_METADATA') {
+        return {...state, districtsMetadata: action.payload }
+    }
+
+    if (action.type === 'SET_DISTRICTS_DATA') {
+        return {...state, districtsData: action.payload }
     }
 
     if (action.type === 'SET_TIME_EXTEND') {
