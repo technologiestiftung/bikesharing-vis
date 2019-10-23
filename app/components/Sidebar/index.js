@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import {render} from 'react-dom';
 import styled from 'styled-components';
 
-import DistrictsChart from '../DistrictsChart/index';
+
 import Overview from '../Overview/index';
+import Tile from '../Tile/index';
 import Navigation from '../Navigation/index';
 
 function mapStateToProps(state) {
@@ -27,11 +28,6 @@ class Sidebar extends React.Component {
     }
 
     render() {
-
-        console.log(this.props);
-
-
-
         // render district charts if data is available
         if (this.props.data != null && this.props.districtsMetadata != null) {
 
@@ -51,6 +47,7 @@ class Sidebar extends React.Component {
                     <Navigation />
                     <Overview data={this.props.districtsMetadata}/>
                     {districtData}
+                    <Tile title="Übersicht" data={this.props.districtsMetadata}></Tile>
                 </div>
             )
         }

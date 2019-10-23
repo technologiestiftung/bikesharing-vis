@@ -1,0 +1,35 @@
+svg.chart {
+    color: white;
+    
+    text.axisLabel {
+        opacity: .5;
+        fill: white;
+        font-size: 10px;
+    }
+
+    .xAxis {
+        g.tick {
+            text {
+                font-family: 'IBM Plex Sans';
+                transform: translateY(2px);
+            }
+        }
+    }
+
+    .yAxis {
+        g.tick {
+            text {
+                font-family: 'IBM Plex Sans';
+                transform: translateX(-2px);
+            }
+        }
+    }
+    
+    g.tick {
+        opacity: .5;
+    }
+    
+    path.domain {
+        display: none;
+    }    
+}

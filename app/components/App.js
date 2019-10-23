@@ -97,7 +97,7 @@ class AppContainer extends React.Component {
             .then(() => {
                 d3Json(`./data/${this.props.selectedDataset.replace('trails', 'districts')}`)
                 .then((districtsData => {
-                    this.props.dispatch(setDistrictsMetadata(districtsData.summary));
+                    this.props.dispatch(setDistrictsMetadata(districtsData.allDistricts));
                     this.props.dispatch(setDistrictsData(districtsData));
                 }))
             })
