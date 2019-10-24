@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from "react-redux";
 
+import { setTime } from '../../../store/actions/index';
+
 import { 
     histogram as d3Histogram,
     select as d3Select,
@@ -52,6 +54,8 @@ class LineChart extends React.Component {
         this.marginTop = 30;
 
         this.line = null;
+
+        this.isDown = true;
 
         this.yMax = null;
         this.xMax = null;
@@ -260,6 +264,12 @@ class LineChart extends React.Component {
         
                     d3Select(`#count-${i}`).text(datum);
                 })                
+            })
+            .on('mousedown', (d, i, n) => {
+                this.isDown = true;
+                let mouse = d3Mouse(d3Select(n[i]).node());
+                var date = this.x.invert(mouse[0]);
+                this.props.dispatch(setTime(this.trailsScale.invert(date)));
             })
     }
 

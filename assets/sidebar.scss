@@ -55,6 +55,10 @@
         background: #292929;
         border-radius: 6px;
         box-shadow: #1f1f1f 0px 2px 3px 0px;
+        
+        &:hover {
+            box-shadow: #1f1f1f 0px 3px 6px 0px;
+        }
 
         .outer {
             border-bottom: 1px solid #333333;
