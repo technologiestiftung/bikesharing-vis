@@ -25,8 +25,12 @@ class Overview extends React.Component {
                     <LineChart 
                         lidl={this.props.data.arrStartLidl} 
                         next={this.props.data.arrStartNext} 
+                        data={[this.props.data.arrStartLidl, this.props.data.arrStartNext]}
                         id="tripsTotal" 
-                        date={new Date('2019-12-17')}>    
+                        date={new Date('2019-12-17')}
+                        legend={['LidlBike', 'NextBike']}
+                        >   
+                         
                     </LineChart>
                 </div>
             </div>
