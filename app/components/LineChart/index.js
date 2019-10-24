@@ -112,7 +112,7 @@ class LineChart extends React.Component {
         this.props.legend.forEach((label,i) => {
                 
                 wrapperLegend.append('text')
-                    .attr('id', `count-${label}`)
+                    .attr('id', `count-${i}`)
                     .attr('fill', this.colors[i])
                     .attr("transform", `translate(${this.width - 185 - (i * spacing)},${this.marginTop - 15})`)
                     .text(this.state.currentRides[i])
@@ -170,39 +170,44 @@ class LineChart extends React.Component {
 
     updateMarker = () => {
         if (this.data != null) {
-            let date = this.trailsScale(this.props.time);
-            this.marker.style('display', 'inherit');
-            this.marker.attr('cx', this.x(date))
-            this.marker.attr('cy', this.getMarkerY(this.data, date))
-
-            var index = this.bisect(this.data, date),
-            datum = this.data[index].value;
-
-            d3Select('#count-LidlBike').text(datum);
-
-
-            // console.log(endDatum);
+            this.data.forEach((set, i) => {
+                let marker = d3Select(`#marker-${i}`);
+                let date = this.trailsScale(this.props.time);
+                marker.style('display', 'inherit');
+                marker.attr('cx', this.x(date))
+                marker.attr('cy', this.getMarkerY(set, date))
+    
+                var index = this.bisect(set, date),
+                datum = set[index].value;
+    
+                d3Select(`#count-${i}`).text(datum);
+            })
         }
     }
 
     transformData = () => {
-        console.log(this.props.lidl, this.props.date.getFullYear());
 
-        let arr = [];
-        let total = this.props.lidl.length;
-        let add = 600000;
-        let dateCurrent = this.props.date.getTime();
+        let sets = [];
 
-        this.props.lidl.forEach(value => {
-            arr.push({ date: dateCurrent, value: value });
-            dateCurrent += add;
-        });
+        this.props.data.forEach((dataset,i) => {
+            let arr = [];
+            let total = this.props.lidl.length;
+            let add = 600000;
+            let dateCurrent = this.props.date.getTime();
 
-        this.drawLine(arr);
+            dataset.forEach(value => {
+                arr.push({ date: dateCurrent, value: value });
+                dateCurrent += add;
+            });
+
+            sets.push(arr);
+
+            this.drawLine(arr, this.colors[i], i);
+        })
+        this.data = sets;
     }
 
-    drawLine = (data) => {
-        this.data = data;
+    drawLine = (data, color, index) => {
         this.line = d3Line()
             .defined(d => !isNaN(d.value))
             .x(d => this.x(d.date))
@@ -211,46 +216,59 @@ class LineChart extends React.Component {
         this.svg.append("path")
             .datum(data)
             .attr("fill", "none")
-            .attr("stroke", "#ef8a62")
+            .attr("stroke", color)
             .attr("stroke-width", 2)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round")
             .attr('transform', 'translate(16,30)')
             .attr("d", this.line);
 
-
-        this.marker = this.svg.append('circle')
+        this.svg.append('circle')
             .attr('r', 4)
+            .attr('id', `marker-${index}`)
             .style('display', 'none')
-            .style('fill', '#ef8a62')
+            .style('fill', this.colors[index])
             .style('pointer-events', 'none')
             .style('stroke', '#303030')
             .style('stroke-width', '2px')
             .attr('transform', 'translate(16,30)');
 
+
         this.svg
-            .on('mouseover', () => { this.marker.style('display', 'inherit'); })
-            .on('mouseout', () => { this.marker.style('display', 'none'); })
+            .on('mouseover', () => { 
+                d3Select('#marker-0').style('display', 'inherit'); 
+                d3Select('#marker-1').style('display', 'inherit'); 
+            })
+            .on('mouseout', () => { 
+                d3Select('#marker-0').style('display', 'none'); 
+                d3Select('#marker-1').style('display', 'none'); 
+            })
             .on('mousemove', (d,i,n) => {
                 let mouse = d3Mouse(d3Select(n[i]).node());
 
-                this.marker.attr('cx', mouse[0]);
-                var date = this.x.invert(mouse[0]);
+                this.data.forEach((set, i) => {
+                    let marker = d3Select(`#marker-${i}`);
+                    var date = this.x.invert(mouse[0]);
 
-                this.marker.attr('cy', this.getMarkerY(this.data, date))
+                    marker.attr('cx', mouse[0]);
+                    marker.attr('cy', this.getMarkerY(set, date))
 
-                var index = this.bisect(this.data, date),
-                datum = this.data[index].value;
-    
-                d3Select('#count-LidlBike').text(datum);
+                    marker.attr('cy', this.getMarkerY(set, date))
+
+                    var index = this.bisect(set, date),
+                    datum = set[index].value;
+        
+                    d3Select(`#count-${i}`).text(datum);
+                })                
             })
     }
 
     getMarkerY = (data, date) => {
         var index = this.bisect(data, date),
         startDatum = data[index - 1],
-        endDatum = data[index],
-        interpolate = d3InterpolateNumber(startDatum.value, endDatum.value),
+        endDatum = data[index]
+
+        var interpolate = d3InterpolateNumber(startDatum.value, endDatum.value),
         range = endDatum.date - startDatum.date,
         valueY = interpolate((date % range) / range);
         return this.y(valueY);
