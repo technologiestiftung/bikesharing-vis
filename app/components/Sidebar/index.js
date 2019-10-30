@@ -6,7 +6,10 @@ import styled from 'styled-components';
 
 import Overview from '../Overview/index';
 import Tile from '../Tile/index';
+import Tab from '../Tab/index';
 import Navigation from '../Navigation/index';
+import LineChart from '../LineChart';
+
 
 function mapStateToProps(state) {
     return {
@@ -19,10 +22,6 @@ class Sidebar extends React.Component {
         super(props);
     }
 
-    componentDidUpdate() {
-        // console.log(this.props);
-    }
-
     componentDidMount() {
         // console.log(this.props);
     }
@@ -32,22 +31,35 @@ class Sidebar extends React.Component {
         if (this.props.data != null && this.props.districtsMetadata != null) {
 
             const keys = Object.keys(this.props.data);
-
-            console.log(this.props.districtsMetadata);
             
             const districtData = keys.map((districtName,i) => {
                 if (districtName != 'summary') {
                     const districtData = this.props.data[districtName];
-                    // return (<DistrictsChart type="start" max={this.props.districtsMetadata.maxTripsStart} data={districtData} name={districtName} key={i} id={`district-${i}`} />)
+                    // return (<Tile type="start" data={districtData} title={districtName} key={i} id={`district-${i}`} />)
+                    return (
+                        <LineChart 
+                            lidl={districtData.arrStartLidl} 
+                            next={districtData.arrStartNext} 
+                            data={[districtData.arrStartLidl, districtData.arrStartNext]}
+                            id="tripsTotal" 
+                            date={new Date('2019-12-17')}
+                            legend={['LidlBike', 'NextBike']}
+                        >   
+                         
+                        </LineChart>
+                    )
                 }
             })
+
+            console.log(districtData);
 
             return (
                 <div className="sidebar">
                     <Navigation />
                     <Overview data={this.props.districtsMetadata}/>
-                    {districtData}
+                    <Tab />
                     <Tile title="Übersicht" data={this.props.districtsMetadata}></Tile>
+                    {districtData}
                 </div>
             )
         }

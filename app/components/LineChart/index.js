@@ -12,6 +12,7 @@ import {
     scaleTime as d3ScaleTime,
     max as d3Max,
     line as d3Line,
+    area as d3Area,
     axisBottom as d3AxisBottom,
     bisector as d3Bisector,
     axisLeft as d3AxisLeft,
@@ -21,14 +22,14 @@ import {
 
 const mapStateToProps = function(state) {
     return {
-      histogram: state.histogram,
+//       histogram: state.histogram,
       time: state.time,
-      barCurrent: state.barCurrent,
-      provider0: state.provider0,
-      provider1: state.provider1,
-      provider2: state.provider2,
-      vendor: state.vendor,
-      histogramNeedsUpdate: state.histogramNeedsUpdate,
+//       barCurrent: state.barCurrent,
+//       provider0: state.provider0,
+//       provider1: state.provider1,
+//       provider2: state.provider2,
+//       vendor: state.vendor,
+//       histogramNeedsUpdate: state.histogramNeedsUpdate,
     }
 }
 
@@ -37,9 +38,11 @@ class LineChart extends React.Component {
         super(props);
 
         this.svg = null;
+        this.svgVis = null;
         this.width = null;
         this.height = null;
         this.bars = null;
+        this.areaShape = null;
         this.highlightedBar = null;
 
         this.colors = ['#ef8a62', '#FFFFFF']
@@ -48,12 +51,15 @@ class LineChart extends React.Component {
         this.y = null;
         this.trailsScale = null;
 
-        this.margin = 5;
+        this.marginRight = 20;
         this.marginLeft = 25;
         this.marginBottom = 40;
         this.marginTop = 30;
 
         this.line = null;
+        this.lineDefault = null;
+        this.areaDefault = null;
+        this.area = null;
 
         this.isDown = true;
 
@@ -95,6 +101,9 @@ class LineChart extends React.Component {
             .attr('width', this.width)
             .attr('height', this.height)
 
+        this.svgVis = this.svg.append('g')
+            .attr('transform', `translate(${this.marginLeft},${this.marginTop})`);
+
         this.groupAxis = this.svg.append("g")
             .attr("id", "groupAxis")
 
@@ -133,20 +142,22 @@ class LineChart extends React.Component {
 
     createAxis = () => {
 
+        let time = (this.props.date.getTime() - 60 * 60 * 1000);
+
         this.x = d3ScaleTime()
-            .domain([this.props.date.getTime(), this.props.date.getTime() + 21 * 60 * 60 * 1000])
-            .range([0, this.width - this.margin - this.marginLeft])
+            .domain([time, time + (24 * 60 * 60 * 1000)])
+            .range([0, this.width - this.marginLeft - this.marginRight])
             .nice()
 
         this.trailsScale = d3ScaleLinear()
             .domain([0,99999])
-            .range([this.props.date.getTime(), this.props.date.getTime() + 21 * 60 * 60 * 1000])
+            .range([time, time + (24 * 60 * 60 * 1000)])
 
         this.y = d3ScaleLinear()
             .domain([40, 0])
             .range([0, this.height - this.marginBottom - this.marginTop]);
 
-        this.xAxis = d3AxisBottom(this.x).ticks(5);
+        this.xAxis = d3AxisBottom(this.x).ticks(4);
         this.yAxis = d3AxisLeft(this.y).ticks(3);
 
         this.groupAxis.append("g")
@@ -165,7 +176,7 @@ class LineChart extends React.Component {
             .attr("transform", "translate("+ 10 +"," + (130) + ")")
         
         this.groupAxis.append('text')
-            .text('Radfahrten')
+            .text('Radfahrten / 10 Min.')
             .classed('axisLabel', true)
             .attr("transform", "translate("+ 1 +"," + (this.marginTop - 15) + ")")
 
@@ -175,8 +186,10 @@ class LineChart extends React.Component {
     updateMarker = () => {
         if (this.data != null) {
             this.data.forEach((set, i) => {
-                let marker = d3Select(`#marker-${i}`);
+                let marker = d3Select(`#marker-${i}`)
+
                 let date = this.trailsScale(this.props.time);
+                
                 marker.style('display', 'inherit');
                 marker.attr('cx', this.x(date))
                 marker.attr('cy', this.getMarkerY(set, date))
@@ -195,7 +208,6 @@ class LineChart extends React.Component {
 
         this.props.data.forEach((dataset,i) => {
             let arr = [];
-            let total = this.props.lidl.length;
             let add = 600000;
             let dateCurrent = this.props.date.getTime();
 
@@ -211,34 +223,129 @@ class LineChart extends React.Component {
         this.data = sets;
     }
 
+    updateChart = () => {
+        let sets = [];
+
+        this.props.data.forEach((dataset,i) => {
+            let arr = [];
+            let add = 600000;
+            let dateCurrent = this.props.date.getTime();
+
+            dataset.forEach(value => {
+                arr.push({ date: dateCurrent, value: value });
+                dateCurrent += add;
+            });
+
+            sets.push(arr);
+
+            this.updateShape(arr, i);
+        })
+        this.data = sets;
+    }
+
+    updateShape = (data, index) => {
+
+        d3Select(`path#pathShape-${index}`)
+            .datum(data)
+            .transition()
+            .duration(500)
+            .attr("d", this.line)
+
+        d3Select(`path#areaShape-${index}`)
+            .datum(data)
+            .transition()
+            .duration(500)
+            .attr("d", this.line)
+    }
+
     drawLine = (data, color, index) => {
+
+        this.areaDefault = d3Area()
+            .defined(d => !isNaN(d.value))
+            .x(d => this.x(d.date))
+            .y0(d => this.y(0))
+            .y1(70)
+
+        this.area = d3Area()
+            .defined(d => !isNaN(d.value))
+            .x(d => this.x(d.date))
+            .y0(d => this.y(d.value))
+            .y1(70)
+
+        this.svgVis.append("linearGradient")
+            .attr("id", "lidl-gradient")
+            .attr("gradientUnits", "userSpaceOnUse")
+            .attr("x1", 0).attr("y1", this.y(20))
+            .attr("x2", 0).attr("y2", this.y(0))
+          .selectAll("stop")
+            .data([
+              {offset: "0%", color: "#ef8a62"},
+              {offset: "100%", color: "#292929"}
+            ])
+          .enter().append("stop")
+            .attr("offset", function(d) { return d.offset; })
+            .attr("stop-color", function(d) { return d.color; });
+
         this.line = d3Line()
             .defined(d => !isNaN(d.value))
             .x(d => this.x(d.date))
             .y(d => this.y(d.value))
 
-        this.svg.append("path")
+        this.lineDefault = d3Line()
+            .defined(d => !isNaN(d.value))
+            .x(d => this.x(d.date))
+            .y(d => this.y(0))
+      
+
+        this.svgVis.append("rect")
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .attr('fill', 'black')
+            .attr('fill-opacity', '0')
+
+        this.areaShape = this.svgVis.append("path")
+            .datum(data)
+            .attr("fill", "red")
+            .attr('id', `areaShape-${index}`)
+            .attr("class", "area")
+            .attr("d", this.areaDefault)
+            .transition()
+            .duration(500)
+            
+
+        this.areaShape
+            .attr("d", this.area)
+            .transition()
+            .duration(500)
+
+        this.pathShape = this.svgVis.append("path")
             .datum(data)
             .attr("fill", "none")
+            .attr('id', `pathShape-${index}`)
             .attr("stroke", color)
             .attr("stroke-width", 2)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round")
-            .attr('transform', 'translate(16,30)')
-            .attr("d", this.line);
+            .attr("d", this.lineDefault)
+            .transition()
+            .duration(500)
+        
+            
+        this.pathShape    
+            .attr("d", this.line)
+            .transition()
+            .duration(500)
 
-        this.svg.append('circle')
+        this.svgVis.append('circle')
             .attr('r', 4)
             .attr('id', `marker-${index}`)
             .style('display', 'none')
             .style('fill', this.colors[index])
             .style('pointer-events', 'none')
-            .style('stroke', '#303030')
+            .style('stroke', '#292929')
             .style('stroke-width', '2px')
-            .attr('transform', 'translate(16,30)');
 
-
-        this.svg
+        this.svgVis
             .on('mouseover', () => { 
                 d3Select('#marker-0').style('display', 'inherit'); 
                 d3Select('#marker-1').style('display', 'inherit'); 
@@ -263,7 +370,12 @@ class LineChart extends React.Component {
                     datum = set[index].value;
         
                     d3Select(`#count-${i}`).text(datum);
-                })                
+
+                    if (this.isDown) {
+                        this.props.dispatch(setTime(this.trailsScale.invert(date)));
+                    }
+                })     
+                           
             })
             .on('mousedown', (d, i, n) => {
                 this.isDown = true;
@@ -271,24 +383,34 @@ class LineChart extends React.Component {
                 var date = this.x.invert(mouse[0]);
                 this.props.dispatch(setTime(this.trailsScale.invert(date)));
             })
+            .on("mouseup", () => {
+                this.isDown = false;
+            });
     }
 
     getMarkerY = (data, date) => {
-        var index = this.bisect(data, date),
-        startDatum = data[index - 1],
-        endDatum = data[index]
+        var index = this.bisect(data, date);
 
-        var interpolate = d3InterpolateNumber(startDatum.value, endDatum.value),
-        range = endDatum.date - startDatum.date,
-        valueY = interpolate((date % range) / range);
-        return this.y(valueY);
+        if (index > 0 && index < data.length) {
+            var startDatum = data[index - 1],
+            endDatum = data[index]
+    
+            var interpolate = d3InterpolateNumber(startDatum.value, endDatum.value),
+            range = endDatum.date - startDatum.date,
+            valueY = interpolate((date % range) / range);
+            return this.y(valueY);
+        }
     }
 
     componentDidMount() {
         this.init();
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
+        if (this.props.data !== prevProps.data) {
+          this.updateChart()
+        }
+
         this.updateMarker()
     }
 

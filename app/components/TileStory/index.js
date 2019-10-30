@@ -7,7 +7,7 @@ function mapStateToProps(state) {
     };
 }
 
-class Overview extends React.Component {
+class TileStory extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -19,19 +19,15 @@ class Overview extends React.Component {
                     <span>{this.props.title}</span>
                 </div>
 
+                
+                
+
                 <div className="numbers-wrapper">
-                    <LineChart 
-                        data={[this.props.data.arrStartLidl, this.props.data.arrStartNext]}
-                        id="tripsTotal" 
-                        date={new Date('2019-12-17')}
-                        legend={['LidlBike', 'NextBike']}
-                        >   
-                         
-                    </LineChart>
+                    
                 </div>
             </div>
         )
     }
 }
 
-export default connect(mapStateToProps)(Overview);
+export default connect(mapStateToProps)(TileStory);

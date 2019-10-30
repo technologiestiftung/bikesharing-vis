@@ -10,7 +10,7 @@ const StoryWrapper = styled.div`
     height: 330px;
     position: absolute;
     top: 220px;
-    right: -350px;
+    left: -450px;
     background: ${props => props.theme.colorPrimaryDark};
     font-family: ${props => props.theme.fontFamily};
     color: white;
@@ -23,7 +23,7 @@ const StoryWrapper = styled.div`
 
     &.visible {
         opacity: 1;
-        transform: translateX(-375px);
+        transform: translateX(425px);
         transition: all .25s ease;
     }
 

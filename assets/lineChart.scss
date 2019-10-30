@@ -1,5 +1,6 @@
 svg.chart {
     color: white;
+    cursor: pointer;
     
     text.axisLabel {
         opacity: .5;
@@ -23,6 +24,11 @@ svg.chart {
                 transform: translateX(-2px);
             }
         }
+    }
+
+    .area {
+        fill: url(#lidl-gradient);
+        fill-opacity: .3;
     }
     
     g.tick {

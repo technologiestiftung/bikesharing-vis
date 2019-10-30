@@ -94,13 +94,6 @@ class AppContainer extends React.Component {
                 this.loadDataset(vendorId);
 
             })
-            .then(() => {
-                d3Json(`./data/${this.props.selectedDataset.replace('trails', 'districts')}`)
-                .then((districtsData => {
-                    this.props.dispatch(setDistrictsMetadata(districtsData.allDistricts));
-                    this.props.dispatch(setDistrictsData(districtsData));
-                }))
-            })
     }
 
     loadDataset = (vendorId) => {
@@ -198,7 +191,9 @@ class AppContainer extends React.Component {
                             };
             
                             return filtered
-                        }).then((data) => {
+                        })
+
+                        .then((data) => {
                             // filter data by active bike trips at the moment
             
                             // 2880 min = 2 days 
@@ -221,28 +216,17 @@ class AppContainer extends React.Component {
             
                             this.props.dispatch(setTimeExtend([first, last]));
             
-            
                             return timestampsArr;
-                        }).then(arr => {
-                            // count trips for every 10 minutes
-                            let tripsByTime = [];
-            
-                            for (let index = 0; index < 99999; index += 1000) {
-                                let tripsCount = 0;
-                                
-                                arr.forEach(timestamp => {
-                                    if (index > timestamp[0] && index < timestamp[1]) {
-                                        tripsCount += 1;
-                                    }
-                                })
-                                tripsByTime.push([index, tripsCount]);
-                            }        
-                            return tripsByTime;
-                        }).then(histogramData => {
-                            this.props.dispatch(setHistogram(histogramData));
-                            this.props.dispatch(setUpdateHistogram(true));
-                            this.props.dispatch(setStateDeckGl(true));
                         })
+
+                        .then(() => {
+                            d3Json(`./data/${this.props.selectedDataset.replace('trails', 'districts')}`)
+                            .then((districtsData => {
+                                this.props.dispatch(setDistrictsMetadata(districtsData.allDistricts));
+                                this.props.dispatch(setDistrictsData(districtsData));
+                            }))
+                        })
+                        
         }, 250)
         
         
@@ -273,6 +257,7 @@ class AppContainer extends React.Component {
     }
     
     componentDidUpdate() {
+        
         if (this.props.update == true) {
             this.loadDataset(this.props.vendor);
             this.props.dispatch(toggleUpdate(false));
