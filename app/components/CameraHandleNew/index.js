@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, toggleUpdate, setStoryVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
+import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
 import { FlyToInterpolator } from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 import styled from "styled-components";
@@ -13,7 +13,6 @@ function mapStateToProps(state) {
       transitionDuration: state.transitionDuration,
       vendor: state.vendor,
       time: state.time,
-      storyVisible: state.storyVisible,
       storyId: state.storyId
     };
 }
@@ -31,6 +30,8 @@ class CameraHandle extends React.Component {
 
     moveToLocation = () => {
 
+        console.log(this.props.storyId);
+
         const location = {
             longitude: this.props.lng,
             latitude: this.props.lat, 
@@ -42,11 +43,11 @@ class CameraHandle extends React.Component {
             transitionEasing: d3EaseCubic
         }
 
-        console.log(location, this.props.label);
+        
 
-        this.props.dispatch(setStoryVisible(false));     
         this.props.dispatch(setStateDeckGl(false));
         this.props.dispatch(setViewport(location));
+        this.props.dispatch(setStoryId(this.props.newStoryId));
         
         setTimeout(() => {
             this.props.dispatch(setStateDeckGl(true));
@@ -61,12 +62,21 @@ class CameraHandle extends React.Component {
     }
 
     render() {
-        var btnClass = classNames({
-            btn: true,
-        });
+        if (this.props.newStoryId != null) {
+            var btnClass = classNames({
+                'camera-handle': true,
+                'active': this.props.storyId == this.props.newStoryId
+            });
+        } else if (this.props.newStoryId == null) {
+            var btnClass = classNames({
+                'camera-handle': true,
+                'active': true
+            });
+        }
+
         
         return (
-            <span class={`camera-handle ${this.props.class}`} onClick={this.moveToLocation}>{this.props.label}</span>
+            <span className={`${btnClass} ${this.props.classNaming}`} onClick={this.moveToLocation}>{this.props.label}</span>
         );
     }
 }

@@ -6,6 +6,12 @@ svg.chart {
         opacity: .5;
         fill: white;
         font-size: 10px;
+
+        &.focus {
+            opacity: 1;
+            font-weight: 600;
+            letter-spacing: .25px;
+        }
     }
 
     .xAxis {

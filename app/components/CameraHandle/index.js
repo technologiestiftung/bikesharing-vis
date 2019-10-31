@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, toggleUpdate, setStoryVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
+import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, toggleUpdate, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
 import { FlyToInterpolator } from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 import styled from "styled-components";
@@ -20,7 +20,6 @@ function mapStateToProps(state) {
       transitionDuration: state.transitionDuration,
       vendor: state.vendor,
       time: state.time,
-      storyVisible: state.storyVisible,
       storyId: state.storyId
     };
 }
@@ -136,7 +135,6 @@ class CameraHandle extends React.Component {
             this.props.dispatch(setButtonPlay(true));
             this.props.dispatch(setButtonBackward(false));
             this.props.dispatch(setButtonForward(false));
-            this.props.dispatch(setStoryVisible(true));
         },this.props.transitionDuration)
     }
 
@@ -152,8 +150,7 @@ class CameraHandle extends React.Component {
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: d3EaseCubic
         }
-
-        this.props.dispatch(setStoryVisible(false));     
+     
         this.props.dispatch(setStateDeckGl(false));
         this.props.dispatch(setViewport(Berlin));
         
@@ -190,7 +187,6 @@ class CameraHandle extends React.Component {
         this.props.dispatch(setStoryId(0));    
         
         setTimeout(() => {
-            this.props.dispatch(setStoryVisible(true));
         }, this.props.transitionDuration);
 
         this.props.dispatch(setViewport(longestRide));
@@ -224,7 +220,6 @@ class CameraHandle extends React.Component {
             this.props.dispatch(setButtonPlay(true));
             this.props.dispatch(setButtonBackward(false));
             this.props.dispatch(setButtonForward(false));
-            this.props.dispatch(setStoryVisible(true));
         },this.props.transitionDuration)
 
     }

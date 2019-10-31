@@ -15,23 +15,23 @@ class Overview extends React.Component {
         return(
             <div className="tile">
                 <div className="outer">
-                    <span>Übersicht</span>
+                    <span>Fahrten pro Tag</span>
                 </div>
 
                 <div className="numbers-wrapper">
                     <div className="wrapper-number">
-                        <span>ø-Distanz (km)</span>
-                        <span className="number">data here</span>
+                        <span>LIDL-Bike</span>
+                        <span className="number">{this.props.lidl != undefined ? this.props.lidl : 'lade...'}</span>
                     </div>
 
                     <div className="wrapper-number">
-                        <span>ø-Geschw. (km/h)</span>
-                        <span className="number">data here</span>
+                        <span>NextBike</span>
+                        <span className="number">{this.props.next != undefined ? this.props.next : 'lade...'}</span>
                     </div>
 
                     <div className="wrapper-number">
                         <span>Alle Fahrten</span>
-                        <span className="number">{this.props.data.tripsTotal}</span>
+                        <span className="number">{this.props.all != undefined ? this.props.all : 'lade...'}</span>
                     </div>
 
                 </div>

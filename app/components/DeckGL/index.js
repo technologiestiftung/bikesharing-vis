@@ -1,23 +1,15 @@
 import React, {Component} from 'react';
-import {render} from 'react-dom';
-import MapGL, {StaticMap, FlyToInterpolator, ScaleControl} from 'react-map-gl';
+import {StaticMap, FlyToInterpolator} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
-import {MapboxLayer} from '@deck.gl/mapbox';
 import {PhongMaterial} from '@luma.gl/core';
 import {AmbientLight, PointLight, LightingEffect} from '@deck.gl/core';
-import { json as d3Json } from 'd3';
-
-import { easeCubic as d3EaseCubic } from 'd3';
 
 import { TripsLayer } from '@deck.gl/geo-layers';
-import { PolygonLayer, Layer } from '@deck.gl/layers';
 
 import { config } from '../../../config.js';
 
 import { connect } from "react-redux";
-import { setTime, setTimeOffset, setViewport } from '../../../store/actions/index';
-import {fromJS} from 'immutable';
-import { setTimeout } from 'timers';
+import { setTime, setTimeOffset } from '../../../store/actions/index';
 
 function mapStateToProps(state) {
   return {
@@ -26,6 +18,13 @@ function mapStateToProps(state) {
 		timeOffset: state.timeOffset,
 		viewport: state.viewport,
 		loaded: state.loaded,
+		berlinGeoJson: state.berlinGeoJson,
+		linienstrGeoJson: state.linienstrGeoJson,
+		tempelhofGeoJson: state.tempelhofGeoJson,
+		storyId: state.storyId,
+		tempelhofGeoJson: state.tempelhofGeoJson,
+		berlinDistrictsGeoJson: state.berlinDistrictsGeoJson,
+		highlightedDistrict: state.highlightedDistrict,
 		data: state.data,
 		sbahnVisible: state.sbahnVisible,
 		animationSpeed: state.animationSpeed,
@@ -34,20 +33,6 @@ function mapStateToProps(state) {
 
 // Set your mapbox token here
 const MAPBOX_TOKEN = config.token; // eslint-disable-line
-
-// source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
-const AIR_PORTS =
-  'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';
-
-// Source data CSV
-const DATA_URL = {
-  BUILDINGS:
-	'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/buildings.json', // eslint-disable-line
-  TRIPS:
-	'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json', // eslint-disable-line
-	TRIPS_TEST:
-	'./data/data_routed_by_trips_merged.json'
-};
 
 export const INITIAL_VIEW_STATE = {
   latitude: 52.500869,
@@ -196,40 +181,93 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	_renderLayers() {
-		const sbahn = this.sbahn;
 
-		return [
+		let layers = [];
+
+		layers.push(
 			new TripsLayer({
-				id: 'trips-layer',
-				data: this.props.data,
-				getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
-				getColor: (d) => {
-					if(d.props.providerId == 0) {
-						return [247,247,247]
-					} 
-					
-					else if (d.props.providerId == 1) {
-						return [239,138,98]
+			id: 'trips-layer',
+			data: this.props.data,
+			getPath: d => d.segments.map(p => [p[0], p[1], p[2]]),
+			getColor: (d) => {
+				if(d.props.providerId == 0) {
+					return [247,247,247]
+				} 
+				
+				else if (d.props.providerId == 1) {
+					return [239,138,98]
+				}
+			},
+			opacity: 1,
+			widthMinPixels: 5,
+			rounded: true,
+			trailLength: 1000,
+			currentTime: this.props.time
+					}),
+		new GeoJsonLayer({
+			id: "all-districts",
+			data: this.props.berlinGeoJson,
+			stroked: true,
+			visible: true,
+			filled: false,
+			getLineColor: [130,130,130],
+			getLineWidth: 10,
+		}))
+
+		if (this.props.berlinDistrictsGeoJson != null) {
+			this.props.berlinDistrictsGeoJson.forEach((district,i) => {
+				// console.log(district.features[0].properties.Gemeinde_name);
+				if (this.props.highlightedDistrict == district.features[0].properties.Gemeinde_name) {
+					layers.push(
+						new GeoJsonLayer({
+							id: district.features[0].properties.Gemeinde_name,
+							data: district,
+							stroked: true,
+							visible: true,
+							filled: false,
+							getLineColor: [255,255,255],
+							getLineWidth: 40,
+						})
+						)
 					}
-				},
-				opacity: 1,
-				widthMinPixels: 5,
-				rounded: true,
-				trailLength: 1000,
-				currentTime: this.props.time
-						}),
-			new GeoJsonLayer({
-				id: "3d-buildings",
-				data: sbahn,
-				stroked: true,
-				visible: this.props.sbahnVisible,
-				getDashArray: (data, target) => { return [10, 200] },
-				dashJustified: true,
-				filled: false,
-				getLineColor: [255,255,255],
-				getLineWidth: 20,
-			}),
-		]
+				})
+			}
+			
+			if (this.props.linienstrGeoJson != null) {
+				if (this.props.storyId == 0) {
+					layers.push(
+						new GeoJsonLayer({
+							id: 'linienstr',
+							data: this.props.linienstrGeoJson,
+							stroked: true,
+							visible: true,
+							filled: false,
+							getLineColor: [25,219,208],
+							getLineWidth: 10,
+						})
+					)
+				}
+			}
+			
+			if (this.props.tempelhofGeoJson != null) {
+				if (this.props.storyId == 1) {
+					layers.push(
+						new GeoJsonLayer({
+							id: 'linienstr',
+							data: this.props.tempelhofGeoJson,
+							stroked: true,
+							visible: true,
+							filled: false,
+							getLineColor: [25,219,208],
+							getLineWidth: 10,
+						})
+					)
+				}
+			}
+
+
+
+		return layers;
 	}
 
 	render() {
@@ -238,25 +276,25 @@ class DeckGlWrapper extends React.Component {
 		if(this.props.loaded) {
 			return (
 				<DeckGL 
-						layers={this._renderLayers()}
-						effects={[lightingEffect]}
-						initialViewState={this.props.viewport} 
-						viewState={this.props.viewport}
-						controller={true}
-						onViewStateChange={this.editViewport}
+					layers={this._renderLayers()}
+					effects={[lightingEffect]}
+					initialViewState={this.props.viewport} 
+					viewState={this.props.viewport}
+					controller={true}
+					onViewStateChange={this.editViewport}
 				>
-						<StaticMap 
-							mapboxApiAccessToken={MAPBOX_TOKEN} 
-							mapStyle="mapbox://styles/mapbox/dark-v9" 
-							transitionInterpolator={new FlyToInterpolator()}
-							onViewportChange={this.editViewport}
-							captureScroll={false}
-							captureDrag={false}
-							attributionControl={false}
-							onLoad={this._onload.bind(this)
-							}
-						/>
 
+				<StaticMap 
+					mapboxApiAccessToken={MAPBOX_TOKEN} 
+					mapStyle="mapbox://styles/mapbox/dark-v9" 
+					transitionInterpolator={new FlyToInterpolator()}
+					onViewportChange={this.editViewport}
+					captureScroll={false}
+					captureDrag={false}
+					attributionControl={false}
+					onLoad={this._onload.bind(this)
+					}
+				/>
 				</DeckGL>
 			);
 		} else {

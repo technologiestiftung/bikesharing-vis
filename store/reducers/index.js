@@ -22,21 +22,27 @@ const initialState = {
         maxZoom: 19,
         minZoom: 10,
     },
-    storyId: 0,
-    storyVisible: false,
+    storyId: null,
     provider0: 0,
     provider1: 0,
     provider2: 0,
-    overlayInfo: false,
+    overlayInfo: true,
     barCurrent: null,
     sbahnVisible: false,
     animationSpeed: 20,
+    berlinGeoJson: null,
     timeExtend: [],
     datasets: null,
     selectedDataset: null,
     selectedDatasetIndex: 18,
     districtsMetadata: null,
-    districtsData: null
+    districtsData: null,
+    berlinDistrictsGeoJson: null,
+    highlightedDistrict: null,
+    mouseIsDown: false,
+    tempelhofGeoJson: null,
+    linienstrGeoJson: null,
+    numRides: null
 }
 
 function rootReducer(state = initialState, action) {
@@ -51,8 +57,36 @@ function rootReducer(state = initialState, action) {
         return {...state, time: action.payload}
     }
 
+    if (action.type === 'SET_MOUSE_DOWN') {
+        return {...state, mouseIsDown: action.payload }
+    }
+
+    if (action.type === 'SET_NUM_RIDES') {
+        return {...state, numRides: action.payload }
+    }
+
+    if (action.type === 'SET_HIGHLIGHTED_DISTRICT') {
+        return {...state, highlightedDistrict: action.payload }
+    }
+
     if (action.type === 'SET_DISTRICTS_METADATA') {
         return {...state, districtsMetadata: action.payload }
+    }
+
+    if (action.type === 'SET_BERLIN_DISTRICTS_GEOJSON') {
+        return {...state, berlinDistrictsGeoJson: action.payload }
+    }
+
+    if (action.type === 'SET_BERLIN_GEOJSON') {
+        return {...state, berlinGeoJson: action.payload }
+    }
+
+    if (action.type === 'SET_TEMPELHOF_GEOJSON') {
+        return {...state, tempelhofGeoJson: action.payload }
+    }
+
+    if (action.type === 'SET_LINIENSTR_GEOJSON') {
+        return {...state, linienstrGeoJson: action.payload }
     }
 
     if (action.type === 'SET_DISTRICTS_DATA') {
@@ -139,22 +173,15 @@ function rootReducer(state = initialState, action) {
         return {...state, histogramNeedsUpdate: action.payload }
     }
 
-    if (action.type === 'SET_STORY_VISIBLE') {
-        return {...state, storyVisible: action.payload }
-    }
-
     if (action.type === 'SET_STORY_ID') {
-        console.log(action.payload);
         return {...state, storyId: action.payload }
     }
 
     if (action.type === 'SET_SBAHN_VISIBLE') {
-        console.log(action.payload);
         return {...state, sbahnVisible: action.payload }
     }
 
     if (action.type === 'SET_ANIMATION_SPEED') {
-        console.log(action.payload);
         return {...state, animationSpeed: action.payload }
     }
 

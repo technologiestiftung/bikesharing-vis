@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from "react-redux";
 import CameraHandleNew from '../CameraHandleNew/index.js';
+import LineChart from '../LineChart/index.js';
 import stories from '../../../assets/stories';
 
 function mapStateToProps(state) {
     return {
+        districtsData: state.districtsData
     };
 }
 
@@ -29,14 +31,12 @@ class Tab extends React.Component {
             node.classList.add('active');
             document.getElementById('stories-tab').classList.remove('active');
             document.getElementById('districts-tab').classList.add('active');
-            document.querySelector('.reset').classList.remove('visible');
 
         } else if ( node.previousSibling != null ) {
             node.previousSibling.classList.remove('active');
             node.classList.add('active');
             document.getElementById('districts-tab').classList.remove('active');
             document.getElementById('stories-tab').classList.add('active');
-            document.querySelector('.reset').classList.add('visible');
         }
     }
 
@@ -48,18 +48,19 @@ class Tab extends React.Component {
     storiesDivs = () => {
         let divs = stories.map((story,i) => {
             return (
-                <div class="story-outer">
+                <div className="story-outer">
                     <h3>{story.title}</h3>
                     <span>{story.description}</span>
 
                     <CameraHandleNew
-                        label='Zum Standort'
+                        label='Standort'
                         lat={story.camera.lat} 
                         lng={story.camera.lng} 
                         zoom={story.camera.zoom} 
                         pitch={story.camera.pitch} 
                         bearing={story.camera.bearing} 
-                        class={story.title}
+                        classNaming={story.title}
+                        newStoryId={story.storyId}
                     ></CameraHandleNew>
                 </div>
             )
@@ -67,13 +68,40 @@ class Tab extends React.Component {
         return divs;
     }
 
+    districtCharts = () => {
+
+        const keys = Object.keys(this.props.districtsData);
+            
+        const charts = keys.map((districtName,i) => {
+            if (districtName != 'allDistricts') {
+                const districtData = this.props.districtsData[districtName];
+                return (
+                    <LineChart 
+                        data={[districtData.arrStartLidl, districtData.arrStartNext]}
+                        id={`tripsTotal-${i}`} 
+                        date={new Date('2019-12-17')}
+                        legend={['LidlBike', 'NextBike']}
+                        domainY={60}
+                        yAxisLabel={districtName}
+                        marginLeft={25}
+                    ></LineChart>
+                )
+            }
+        })
+
+
+        return charts;
+
+    }
+
     render() {
+
         return(
             <div className="tab tile">
                 <div className="outer">
-                    <div class="flex-wrapper row">
-                        <span onClick={((e) => this.handleClick(e))} class="active">Bezirke</span>
-                        <span onClick={((e) => this.handleClick(e))}>Geschichten</span>
+                    <div className="flex-wrapper row">
+                        <span onClick={((e) => this.handleClick(e))} className="active">Bezirke</span>
+                        <span onClick={((e) => this.handleClick(e))}>Szenarien</span>
                     </div>
 
                     <CameraHandleNew
@@ -83,13 +111,14 @@ class Tab extends React.Component {
                         zoom={this.locationBerlin.zoom} 
                         pitch={this.locationBerlin.pitch} 
                         bearing={this.locationBerlin.bearing} 
-                        class={'reset'}
+                        classNaming={'reset-view visible'}
+                        newStoryId={null}
                     >
                     </CameraHandleNew>
                 </div>
 
                 <div id="districts-tab" className="numbers-wrapper active">
-                    Districts
+                    {this.districtCharts()}
                 </div>
 
                 <div id="stories-tab" className="numbers-wrapper">

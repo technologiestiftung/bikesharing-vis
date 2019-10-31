@@ -7,8 +7,78 @@
     margin-top: 10px;
 }
 
+.wrapper-fixed {
+    position: fixed;
+}
+
+.wrapper-scroll {
+    position: absolute;
+    top: 80px;
+}
+
+.HowTo {
+    font-family: 'IBM Plex Sans';
+    display: flex;
+    justify-content: space-around;
+    height: 60px;
+    align-items: center;
+
+    span {
+        text-align: center;
+        opacity: .3;
+        letter-spacing: .15px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all .125s ease-in-out;
+
+        &:hover {
+            opacity: 1;
+            transition: all .125s ease-in-out;
+        }
+    }
+}
+
+
+.btn-prev {
+    position: absolute;
+    right: 120px;
+    transform: translateY(2.5px);
+    opacity: .5;
+    transition: opacity .125 ease-in-out;
+    cursor: pointer;
+    
+    &:hover {
+        opacity: 1;
+        transition: opacity .125 ease-in-out;
+    }
+}
+
+.btn-next {
+    position: absolute;
+    right: 100px;
+    transform: translateY(1px);
+    opacity: .5;
+    transition: opacity .125 ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+        transition: opacity .125 ease-in-out;
+    }
+}
+
+#stories-tab {
+    height: 320px;
+    overflow: scroll;
+}
+
+#districts-tab {
+    height: 320px;
+    overflow: scroll;
+}
+
 .sidebar {
-    z-index: 3;
+    z-index: 0;
     position: absolute;
     right: 0;
     top: 0;
@@ -53,13 +123,21 @@
             margin-top: 10px;
             cursor: pointer;
 
-            color: rgba(255,255,255,.5);
-            background: rgba(255,255,255,.1);
+            color: #168C91;
+            background: #154F52;
             transition: all .25s ease;
+            opacity: 1;
     
             &:hover {
-                color: rgba(255,255,255,1);
-                background: rgba(255,255,255,.4);
+                opacity: 1;
+                color: #19DBE4;
+                background: #154F52;
+            }
+    
+            &.active {
+                opacity: 1;
+                color: #19DBE4;
+                background: #168C91;
             }
 
         }
@@ -77,12 +155,11 @@
             span {
                 font-weight: 600;
                 opacity: .5;
+                font-size: 13px;
                 cursor: pointer;
 
                 &.active {
                     opacity: 1;
-                    border-bottom: 1px solid;
-                    padding-bottom: 10px;
                 }
 
                 &.camera-handle {
@@ -92,11 +169,6 @@
                     transform: translateY(3px);
                     transition: all .25 ease-in-out;
                     display: none;
-                    
-                    &:hover {
-                        opacity: 1;
-                        transition: all .25 ease-in-out;
-                    }
 
                     &.visible {
                         display: block;
@@ -136,6 +208,14 @@
         display: flex;
         flex-direction: row;
         width: 100%;
+
+        &.row {
+            span {
+                &:hover {
+                    opacity: .75;
+                }
+            }
+        }
     }
 
     .tile {
@@ -158,6 +238,11 @@
 
                 &.active {
                     display: block;
+                    opacity: .5
+
+                    &hover() {
+                        opacity: 1;
+                    }
                 }
             }
 
@@ -178,7 +263,7 @@
 
         span {
             font-weight: 400;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .flex-wrapper {

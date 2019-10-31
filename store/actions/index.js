@@ -17,7 +17,6 @@ import { TOGGLE_PROVIDER } from '../constants/action-types';
 import { TOGGLE_UPDATE } from '../constants/action-types';
 import { TOGGLE_OVERLAY_INFO } from '../constants/action-types';
 import { SET_UPDATE_HISTOGRAM } from '../constants/action-types';
-import { SET_STORY_VISIBLE } from '../constants/action-types';
 import { SET_STORY_ID } from '../constants/action-types';
 import { SET_SBAHN_VISIBLE } from '../constants/action-types';
 import { SET_ANIMATION_SPEED } from '../constants/action-types';
@@ -27,6 +26,62 @@ import { SET_SELECTED_DATASET } from '../constants/action-types';
 import { SET_SELECTED_DATASET_INDEX } from '../constants/action-types';
 import { SET_DISTRICTS_METADATA } from '../constants/action-types';
 import { SET_DISTRICTS_DATA } from '../constants/action-types';
+import { SET_BERLIN_GEOJSON } from '../constants/action-types';
+import { SET_BERLIN_DISTRICTS_GEOJSON } from '../constants/action-types';
+import { SET_HIGHLIGHTED_DISTRICT } from '../constants/action-types';
+import { SET_MOUSE_DOWN } from '../constants/action-types';
+import { SET_TEMPELHOF_GEOJSON } from '../constants/action-types';
+import { SET_LINIENSTR_GEOJSON } from '../constants/action-types';
+import { SET_NUM_RIDES } from '../constants/action-types';
+
+export function setNumRides(payload) {
+    return { 
+        type: SET_NUM_RIDES, 
+        payload 
+    };
+}
+
+export function setLinienstrGeoJson(payload) {
+    return { 
+        type: SET_LINIENSTR_GEOJSON, 
+        payload 
+    };
+}
+
+export function setTempelhofGeoJson(payload) {
+    return { 
+        type: SET_TEMPELHOF_GEOJSON, 
+        payload 
+    };
+}
+
+export function setMouseDown(payload) {
+    return { 
+        type: SET_MOUSE_DOWN, 
+        payload 
+    };
+}
+
+export function setHighlightedDistrict(payload) {
+    return { 
+        type: SET_HIGHLIGHTED_DISTRICT, 
+        payload 
+    };
+}
+
+export function setBerlinDistrictsGeoJson(payload) {
+    return { 
+        type: SET_BERLIN_DISTRICTS_GEOJSON, 
+        payload 
+    };
+}
+
+export function setBerlinGeoJson(payload) {
+    return { 
+        type: SET_BERLIN_GEOJSON, 
+        payload 
+    };
+}
 
 export function setTimeExtend(payload) {
     return { 
@@ -185,13 +240,6 @@ export function toggleOverlayInfo(payload) {
 export function setUpdateHistogram(payload) {
     return { 
         type: SET_UPDATE_HISTOGRAM, 
-        payload 
-    };
-}
-
-export function setStoryVisible(payload) {
-    return { 
-        type: SET_STORY_VISIBLE, 
         payload 
     };
 }

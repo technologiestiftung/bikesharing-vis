@@ -162,20 +162,24 @@ function Clock(props) {
             <FlexWrapper>
 
                 <span onClick={() => handleClick('previous', props)} >
-                    <svg style={{marginRight: 5 + 'px', cursor: 'pointer'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                    <svg className="btn-prev" width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                            <g id="Artboard" transform="translate(-112.000000, -70.000000)" fill="#FFFFFF">
-                                <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-225.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>
+                            <g id="cityslam_facebook_1920x1080" transform="translate(-956.000000, -533.000000)" stroke="#FFFFFF" strokeWidth="2.42857143">
+                                <g id="Group" transform="translate(961.000000, 540.000000) rotate(-180.000000) translate(-961.000000, -540.000000) translate(958.000000, 534.000000)">
+                                    <polyline id="Path-Copy-2" transform="translate(3.035714, 5.767857) rotate(90.000000) translate(-3.035714, -5.767857) " points="-2.42857143 8.5 2.91913557 3.03571429 8.5 8.5"></polyline>
+                                </g>
                             </g>
                         </g>
                     </svg>
                 </span>
 
-                <span onClick={() => handleClick('next', props) } >
-                    <svg style={{marginRight: 10 + 'px', cursor: 'pointer'}} width="11px" height="12px" viewBox="0 0 8 9" version="1.1">
+                <span className="btn-next" onClick={() => handleClick('next', props) } >  
+                    <svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                            <g id="Artboard" transform="translate(-116.000000, -70.000000)" fill="#FFFFFF">
-                                <polygon id="Rectangle" transform="translate(118.318019, 74.818019) rotate(-45.000000) translate(-118.318019, -74.818019) " points="120.228388 70.8180195 122.318019 78.8180195 114.318019 76.7283885"></polygon>
+                            <g id="cityslam_facebook_1920x1080" transform="translate(-974.000000, -533.000000)" stroke="#FFFFFF" strokeWidth="2.42857143">
+                                <g id="Group-Copy" transform="translate(975.000000, 534.000000)">
+                                    <polyline id="Path-Copy-2" transform="translate(3.035714, 5.767857) rotate(90.000000) translate(-3.035714, -5.767857) " points="-2.42857143 8.5 2.91913557 3.03571429 8.5 8.5"></polyline>
+                                </g>
                             </g>
                         </g>
                     </svg>

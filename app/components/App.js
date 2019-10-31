@@ -10,8 +10,7 @@ import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
 import Story from './Story/index';
 import { connect } from "react-redux";
-import { setTime, setDatasets, setStateDeckGl, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setUpdateHistogram, setLoaded, setData, setHistogram, setProvider0, setProvider1, setProvider2, setTimeExtend, toggleUpdate } from '../../store/actions/index';
-import store from '../../store/index';
+import { setDatasets,setBerlinGeoJson, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
 
@@ -178,28 +177,29 @@ class AppContainer extends React.Component {
             
                             let filtered;
             
-                            // filter data by bike vendor
+                            let filteredLengthLidl = data.filter((d) => { return d.props.providerId == 1}).length;
+                            let filteredLengthNext = data.filter((d) => { return d.props.providerId == 0}).length;
+
+                            
+                            this.props.dispatch(setNumRides({ next: filteredLengthNext, lidl: filteredLengthLidl }))
+
     
                             if(selectedVendors == 2) {
                                 let filtered = data.filter((d) => { return d.props.providerId == vendorId[0] || d.props.providerId == vendorId[1]});
                                 this.props.dispatch(setData(filtered));
                                 this.props.dispatch(setLoaded(true));
+
                             } else if(selectedVendors == 1) {
                                 let filtered = data.filter((d) => { return d.props.providerId == vendorId[0]});
                                 this.props.dispatch(setData(filtered));
                                 this.props.dispatch(setLoaded(true));
+                                console.log(filtered, filtered.length)
                             };
             
                             return filtered
                         })
 
                         .then((data) => {
-                            // filter data by active bike trips at the moment
-            
-                            // 2880 min = 2 days 
-                            // 288 * 10 min = 2 days
-                            // check every 347 steps how many trips are with in the timeslot
-            
                             let timestampsArr = [];
             
                             let first = 100000000000000, last = 0;
@@ -226,7 +226,51 @@ class AppContainer extends React.Component {
                                 this.props.dispatch(setDistrictsData(districtsData));
                             }))
                         })
-                        
+                        .then(() => {
+                            d3Json(`./data/berlin.json`)
+                            .then((data => {
+
+                                this.props.dispatch(setBerlinGeoJson(data));
+
+                                return data;
+
+                                // this.props.dispatch(setBerlinDistrictsGeoJson());
+                            })).then(data => {
+                                const createDistrictJsons = (data) => {
+                                    let arr = [];
+                                    const dist = data.features.forEach(district => {
+                                        let geojson = {
+                                            type: "FeatureCollection",
+                                            features: []
+                                        }
+                                        geojson.features = [];
+                                        geojson.features.push(district);
+
+                                        
+                                        return arr.push(geojson);
+                                    })
+                            
+                                    return arr;
+                                }
+
+                                const districts = createDistrictJsons(data);
+
+                                this.props.dispatch(setBerlinDistrictsGeoJson(districts));
+                            })
+                        })
+                        .then(() => {
+                            d3Json('./data/tempelhof.json')
+                            .then((data => {
+                                this.props.dispatch(setTempelhofGeoJson(data));
+                            }))
+                        }) 
+                        .then(() => {
+                            d3Json('./data/linienstr.json')
+                            .then((data => {
+                                this.props.dispatch(setLinienstrGeoJson(data));
+                            }))
+                        }) 
+                                      
         }, 250)
         
         
@@ -243,7 +287,6 @@ class AppContainer extends React.Component {
             </a>
         </TsbLinkDiv>;
     }
-
 
     componentDidMount() {
         this.fetchData(this.props.vendor);
@@ -292,12 +335,11 @@ class AppContainer extends React.Component {
                     <div className="app-wrapper">
                         <DeckGlWrapper/>
                         <Sidebar data={this.props.districtsData}/>
-                        <ButtonInfo/>
+                        {/* <ButtonInfo/> */}
                         {/* <Analyse data=""/> */}
                         {/* <Filter/> */}
                         <LogoSvg/>
                         <OverlayAbout/>
-                        <Story/>
                     </div>
                     {this.TSBLink()}
                 </div>

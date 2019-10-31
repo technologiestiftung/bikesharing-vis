@@ -1,16 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
 import { connect } from "react-redux";
 
-import { setTime } from '../../../store/actions/index';
+import { setTime, setHighlightedDistrict, setMouseDown } from '../../../store/actions/index';
 
 import { 
-    histogram as d3Histogram,
     select as d3Select,
-    selectAll as d3SelectAll,
     scaleLinear as d3ScaleLinear,
     scaleTime as d3ScaleTime,
-    max as d3Max,
     line as d3Line,
     area as d3Area,
     axisBottom as d3AxisBottom,
@@ -22,14 +18,8 @@ import {
 
 const mapStateToProps = function(state) {
     return {
-//       histogram: state.histogram,
       time: state.time,
-//       barCurrent: state.barCurrent,
-//       provider0: state.provider0,
-//       provider1: state.provider1,
-//       provider2: state.provider2,
-//       vendor: state.vendor,
-//       histogramNeedsUpdate: state.histogramNeedsUpdate,
+      mouseIsDown: state.mouseIsDown
     }
 }
 
@@ -52,7 +42,7 @@ class LineChart extends React.Component {
         this.trailsScale = null;
 
         this.marginRight = 20;
-        this.marginLeft = 25;
+        this.marginLeft = this.props.marginLeft;
         this.marginBottom = 40;
         this.marginTop = 30;
 
@@ -101,6 +91,11 @@ class LineChart extends React.Component {
             .attr('width', this.width)
             .attr('height', this.height)
 
+        if (this.props.id != 'tripsTotal') {
+            this.svg
+                .attr('style', 'opacity: .5;')
+        }
+
         this.svgVis = this.svg.append('g')
             .attr('transform', `translate(${this.marginLeft},${this.marginTop})`);
 
@@ -125,7 +120,7 @@ class LineChart extends React.Component {
         this.props.legend.forEach((label,i) => {
                 
                 wrapperLegend.append('text')
-                    .attr('id', `count-${i}`)
+                    .attr('id', `${this.props.id}-count-${i}`)
                     .attr('fill', this.colors[i])
                     .attr("transform", `translate(${this.width - 185 - (i * spacing)},${this.marginTop - 15})`)
                     .text(this.state.currentRides[i])
@@ -154,7 +149,7 @@ class LineChart extends React.Component {
             .range([time, time + (24 * 60 * 60 * 1000)])
 
         this.y = d3ScaleLinear()
-            .domain([40, 0])
+            .domain([this.props.domainY, 0])
             .range([0, this.height - this.marginBottom - this.marginTop]);
 
         this.xAxis = d3AxisBottom(this.x).ticks(4);
@@ -176,8 +171,9 @@ class LineChart extends React.Component {
             .attr("transform", "translate("+ 10 +"," + (130) + ")")
         
         this.groupAxis.append('text')
-            .text('Radfahrten / 10 Min.')
+            .text(this.props.yAxisLabel)
             .classed('axisLabel', true)
+            .classed('focus', true)
             .attr("transform", "translate("+ 1 +"," + (this.marginTop - 15) + ")")
 
         this.createLegend();
@@ -186,18 +182,21 @@ class LineChart extends React.Component {
     updateMarker = () => {
         if (this.data != null) {
             this.data.forEach((set, i) => {
-                let marker = d3Select(`#marker-${i}`)
+                let marker = d3Select(`#${this.props.id}-marker-${i}`)
 
                 let date = this.trailsScale(this.props.time);
                 
                 marker.style('display', 'inherit');
                 marker.attr('cx', this.x(date))
                 marker.attr('cy', this.getMarkerY(set, date))
+
+                if (set[index] != undefined) {
+                    var index = this.bisect(set, date)
+                    let datum = set[index].value;
+        
+                    d3Select(`#${this.props.id}-count-${i}`).text(datum);
+                }
     
-                var index = this.bisect(set, date),
-                datum = set[index].value;
-    
-                d3Select(`#count-${i}`).text(datum);
             })
         }
     }
@@ -245,17 +244,21 @@ class LineChart extends React.Component {
 
     updateShape = (data, index) => {
 
-        d3Select(`path#pathShape-${index}`)
+        d3Select(`#${this.props.id}-pathShape-${index}`)
             .datum(data)
             .transition()
             .duration(500)
             .attr("d", this.line)
 
-        d3Select(`path#areaShape-${index}`)
+        d3Select(`#${this.props.id}-areaShape-${index}`)
             .datum(data)
             .transition()
             .duration(500)
             .attr("d", this.line)
+    }
+
+    dispatchHighlightedDistrict = (district) => {
+        this.props.dispatch(setHighlightedDistrict(district))
     }
 
     drawLine = (data, color, index) => {
@@ -306,13 +309,12 @@ class LineChart extends React.Component {
         this.areaShape = this.svgVis.append("path")
             .datum(data)
             .attr("fill", "red")
-            .attr('id', `areaShape-${index}`)
+            .attr('id', `${this.props.id}-areaShape-${index}`)
             .attr("class", "area")
             .attr("d", this.areaDefault)
             .transition()
             .duration(500)
             
-
         this.areaShape
             .attr("d", this.area)
             .transition()
@@ -321,7 +323,7 @@ class LineChart extends React.Component {
         this.pathShape = this.svgVis.append("path")
             .datum(data)
             .attr("fill", "none")
-            .attr('id', `pathShape-${index}`)
+            .attr('id', `${this.props.id}-pathShape-${index}`)
             .attr("stroke", color)
             .attr("stroke-width", 2)
             .attr("stroke-linejoin", "round")
@@ -329,7 +331,6 @@ class LineChart extends React.Component {
             .attr("d", this.lineDefault)
             .transition()
             .duration(500)
-        
             
         this.pathShape    
             .attr("d", this.line)
@@ -338,7 +339,7 @@ class LineChart extends React.Component {
 
         this.svgVis.append('circle')
             .attr('r', 4)
-            .attr('id', `marker-${index}`)
+            .attr('id', `${this.props.id}-marker-${index}`)
             .style('display', 'none')
             .style('fill', this.colors[index])
             .style('pointer-events', 'none')
@@ -347,18 +348,31 @@ class LineChart extends React.Component {
 
         this.svgVis
             .on('mouseover', () => { 
-                d3Select('#marker-0').style('display', 'inherit'); 
-                d3Select('#marker-1').style('display', 'inherit'); 
+                d3Select(`#${this.props.id}-marker-0`).style('display', 'inherit'); 
+                d3Select(`#${this.props.id}-marker-1`).style('display', 'inherit');
+                
+                if (this.props.id != 'tripsTotal') {
+                    this.svg
+                        .attr('style', 'opacity: 1;')
+                }
+
+                this.dispatchHighlightedDistrict(this.props.yAxisLabel);
             })
             .on('mouseout', () => { 
-                d3Select('#marker-0').style('display', 'none'); 
-                d3Select('#marker-1').style('display', 'none'); 
+                d3Select(`#${this.props.id}-marker-0`).style('display', 'none'); 
+                d3Select(`#${this.props.id}-marker-1`).style('display', 'none'); 
+                this.dispatchHighlightedDistrict(null);
+
+                if (this.props.id != 'tripsTotal') {
+                    this.svg
+                        .attr('style', 'opacity: .5;')
+                }
             })
             .on('mousemove', (d,i,n) => {
                 let mouse = d3Mouse(d3Select(n[i]).node());
 
                 this.data.forEach((set, i) => {
-                    let marker = d3Select(`#marker-${i}`);
+                    let marker = d3Select(`#${this.props.id}-marker-${i}`);
                     var date = this.x.invert(mouse[0]);
 
                     marker.attr('cx', mouse[0]);
@@ -366,25 +380,28 @@ class LineChart extends React.Component {
 
                     marker.attr('cy', this.getMarkerY(set, date))
 
-                    var index = this.bisect(set, date),
-                    datum = set[index].value;
-        
-                    d3Select(`#count-${i}`).text(datum);
+                    
+                    var index = this.bisect(set, date);
 
-                    if (this.isDown) {
+                    if (set[index] != undefined) {
+                        let datum = set[index].value;
+                        d3Select(`#${this.props.id}-count-${i}`).text(datum);
+                    }
+
+                    if (this.props.mouseIsDown) {
                         this.props.dispatch(setTime(this.trailsScale.invert(date)));
                     }
                 })     
                            
             })
             .on('mousedown', (d, i, n) => {
-                this.isDown = true;
+                this.props.dispatch(setMouseDown(true))
                 let mouse = d3Mouse(d3Select(n[i]).node());
                 var date = this.x.invert(mouse[0]);
                 this.props.dispatch(setTime(this.trailsScale.invert(date)));
             })
             .on("mouseup", () => {
-                this.isDown = false;
+                this.props.dispatch(setMouseDown(false))
             });
     }
 
