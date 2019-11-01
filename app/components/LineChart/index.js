@@ -188,7 +188,11 @@ class LineChart extends React.Component {
                 
                 marker.style('display', 'inherit');
                 marker.attr('cx', this.x(date))
-                marker.attr('cy', this.getMarkerY(set, date))
+                marker.attr('cy', () => {
+                    let val = this.getMarkerY(set, date);
+                    if (val == undefined) { val = 64.5 }
+                    return val;
+                })
 
                 if (set[index] != undefined) {
                     var index = this.bisect(set, date)

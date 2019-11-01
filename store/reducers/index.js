@@ -25,11 +25,12 @@ const initialState = {
     storyId: null,
     provider0: 0,
     provider1: 0,
+    mode: 'departure', // or 'arrival'
     provider2: 0,
     overlayInfo: true,
     barCurrent: null,
     sbahnVisible: false,
-    animationSpeed: 20,
+    animationSpeed: 30,
     berlinGeoJson: null,
     timeExtend: [],
     datasets: null,
@@ -59,6 +60,10 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_MOUSE_DOWN') {
         return {...state, mouseIsDown: action.payload }
+    }
+
+    if (action.type === 'SET_MODE') {
+        return {...state, mode: action.payload }
     }
 
     if (action.type === 'SET_NUM_RIDES') {

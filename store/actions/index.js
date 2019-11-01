@@ -33,6 +33,14 @@ import { SET_MOUSE_DOWN } from '../constants/action-types';
 import { SET_TEMPELHOF_GEOJSON } from '../constants/action-types';
 import { SET_LINIENSTR_GEOJSON } from '../constants/action-types';
 import { SET_NUM_RIDES } from '../constants/action-types';
+import { SET_MODE } from '../constants/action-types';
+
+export function setMode(payload) {
+    return { 
+        type: SET_MODE, 
+        payload 
+    };
+}
 
 export function setNumRides(payload) {
     return { 

@@ -6,7 +6,8 @@ import stories from '../../../assets/stories';
 
 function mapStateToProps(state) {
     return {
-        districtsData: state.districtsData
+        districtsData: state.districtsData,
+        mode: state.mode
     };
 }
 
@@ -21,6 +22,7 @@ class Tab extends React.Component {
             pitch: 45,
             bearing: 0
         }
+
     }
 
     handleClick = (event) => {
@@ -31,6 +33,7 @@ class Tab extends React.Component {
             node.classList.add('active');
             document.getElementById('stories-tab').classList.remove('active');
             document.getElementById('districts-tab').classList.add('active');
+            document.querySelector('.reset-view').click();
 
         } else if ( node.previousSibling != null ) {
             node.previousSibling.classList.remove('active');
@@ -42,7 +45,6 @@ class Tab extends React.Component {
 
     handleClickReset = (event) => {
         const node = event.target;
-
     }
 
     storiesDivs = () => {
@@ -75,9 +77,13 @@ class Tab extends React.Component {
         const charts = keys.map((districtName,i) => {
             if (districtName != 'allDistricts') {
                 const districtData = this.props.districtsData[districtName];
+
+                let modeLidl = this.props.mode == 'departure' ? 'arrStartLidl' : 'arrEndLidl';
+                let modeNext = this.props.mode == 'departure' ? 'arrStartNext' : 'arrEndNext';
+
                 return (
                     <LineChart 
-                        data={[districtData.arrStartLidl, districtData.arrStartNext]}
+                        data={[districtData[modeLidl], districtData[modeNext]]}
                         id={`tripsTotal-${i}`} 
                         date={new Date('2019-12-17')}
                         legend={['LidlBike', 'NextBike']}
@@ -111,7 +117,7 @@ class Tab extends React.Component {
                         zoom={this.locationBerlin.zoom} 
                         pitch={this.locationBerlin.pitch} 
                         bearing={this.locationBerlin.bearing} 
-                        classNaming={'reset-view visible'}
+                        classNaming={'reset-view'}
                         newStoryId={null}
                     >
                     </CameraHandleNew>

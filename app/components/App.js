@@ -1,16 +1,11 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import DeckGlWrapper from './DeckGL/index';
-import Analyse from './Analyse/index';
-import Filter from './Filter/index';
-import Overlay from './Overlay/index';
 import Sidebar from './Sidebar/index';
-import ButtonInfo from './ButtonInfo/index';
 import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
-import Story from './Story/index';
 import { connect } from "react-redux";
-import { setDatasets,setBerlinGeoJson, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate } from '../../store/actions/index';
+import { setDatasets,setBerlinGeoJson, setStateDeckGl, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
 
@@ -23,10 +18,6 @@ const TsbLinkDiv = styled.div`
     z-index: 1;
     bottom: 15px;
     left: 15px;
-
-    @media screen and (max-width: 1180px) {
-        bottom: 85px;
-    }
 
     a {
         display: flex;
@@ -41,6 +32,7 @@ const TsbLinkDiv = styled.div`
 const LogoImg = styled.img`
     margin-top: 10px;
     width: 150px;
+    z-index: -1;
 `;
 
 const mapStateToProps = function(state) {
@@ -91,13 +83,11 @@ class AppContainer extends React.Component {
                 });
 
                 this.loadDataset(vendorId);
-
             })
     }
 
     loadDataset = (vendorId) => {
         let currentDataset = this.props.datasets[this.props.selectedDatasetIndex];
-
         
         this.props.dispatch(setSelectedDataset(currentDataset[1]));
         
@@ -192,8 +182,6 @@ class AppContainer extends React.Component {
                             } else if(selectedVendors == 1) {
                                 let filtered = data.filter((d) => { return d.props.providerId == vendorId[0]});
                                 this.props.dispatch(setData(filtered));
-                                this.props.dispatch(setLoaded(true));
-                                console.log(filtered, filtered.length)
                             };
             
                             return filtered
@@ -269,6 +257,7 @@ class AppContainer extends React.Component {
                             .then((data => {
                                 this.props.dispatch(setLinienstrGeoJson(data));
                             }))
+                            this.props.dispatch(setStateDeckGl(true));
                         }) 
                                       
         }, 250)
@@ -296,10 +285,10 @@ class AppContainer extends React.Component {
 
         setTimeout(() => {
             document.querySelector('.mapboxgl-ctrl-bottom-left').remove();
-        }, 150);
+        }, 250);
     }
     
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         
         if (this.props.update == true) {
             this.loadDataset(this.props.vendor);
@@ -308,6 +297,17 @@ class AppContainer extends React.Component {
             this.fetchData(this.props.vendor);
             this.props.dispatch(toggleUpdate(false));
         }
+
+        if (prevProps.time > 99999) {
+            console.log(prevProps.time)
+            let oldIndex = this.props.selectedDatasetIndex;
+            const newIndex = this.props.selectedDatasetIndex == this.props.datasets.length ? 0 : oldIndex + 1;
+
+            this.props.dispatch(setSelectedDatasetIndex(newIndex));
+            this.props.dispatch(setSelectedDataset(this.props.datasets[this.props.selectedDatasetIndex][1]));
+            this.fetchData(this.props.vendor);
+        }
+
     }
 
     render() {

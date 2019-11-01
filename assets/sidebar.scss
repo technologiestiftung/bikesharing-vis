@@ -150,28 +150,32 @@
 
             .flex-wrapper {
                 justify-content: left;
+                align-items: center;
             }
 
             span {
                 font-weight: 600;
-                opacity: .5;
                 font-size: 13px;
                 cursor: pointer;
-
+                opacity: .5;
+                
                 &.active {
                     opacity: 1;
                 }
 
-                &.camera-handle {
-                    font-weight: 400;
-                    font-size: 10px;
-                    width: 180px;
-                    transform: translateY(3px);
-                    transition: all .25 ease-in-out;
-                    display: none;
 
-                    &.visible {
-                        display: block;
+                &.camera-handle {
+                    font-weight: 600;
+                    width: 180px;
+                    opacity: .5 !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    margin-right: 10px;
+                    font-size: 10px;
+                    transition: all .25 ease-in-out;
+
+                    &:hover {
+                        opacity: .75 !important;
                     }
 
                 }
@@ -233,16 +237,25 @@
             padding-bottom: 10px;
             padding-top: 10px;
 
-            .reset-view {
-                display: none;
-
-                &.active {
-                    display: block;
-                    opacity: .5
-
-                    &hover() {
-                        opacity: 1;
-                    }
+            .reset-view {         
+                font-size: 10px !important;
+                border-radius: 3px;
+                padding: 5px 6px 6px 6px;
+                color: rgba(255,255,255,1);
+                cursor: pointer;
+                font-weight: 600;
+                width: 80px;
+                text-align: center;
+                background: rgba(255,255,255,.3);
+                transition: all .125s ease-in-out;
+                opacity: .5;
+                border: 3px solid rgba(255,255,255,1);
+                margin-left: 0 !important;
+                border-radius: 3px;
+                
+                &:hover {
+                    transition: all .125s ease-in-out;
+                    opacity: .75;
                 }
             }
 
@@ -288,4 +301,88 @@
             }
         }
     }
+
+    .EkagI {
+        &:hover {
+            .MuiSvgIcon-root-11 {
+                fill: white;
+                transition: all .125s ease-in-out;
+            }
+        }
+    }
+}
+
+    .MuiSvgIcon-root-11 {
+        fill: #878787;
+        width: .4em;
+        height: .4em;
+        display: inline-block;
+        font-size: 36px;
+        transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        user-select: none;
+        flex-shrink: 0;
+        transition: all .125s ease-in-out;
+    }
+
+.outer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between !important;
+}
+
+
+.mode-wrapper {
+    width: inherit;
+    margin-right: 10px;
+    transform: translateY(2px);
+
+    .divider {
+        width: 1px;
+        border-left: 3px solid white;
+    }
+
+
+    span.mode {
+        font-size: 10px !important;
+        border-radius: 3px;
+        padding: 5px 6px 6px 6px;
+        color: rgba(255,255,255,1);
+        cursor: pointer;
+        width: 80px;
+        text-align: center;
+        background: rgba(255,255,255,.3);
+        transition: all .125s ease-in-out;
+        opacity: .5;
+        
+        &:hover {
+            transition: all .125s ease-in-out;
+            opacity: .75;
+        }
+        
+        &.pressed {
+            opacity: 1;
+            transition: all .125s ease-in-out;
+        }
+
+        &:first-of-type {
+            border-top: 3px solid rgba(255,255,255,1);
+            border-left: 3px solid rgba(255,255,255,1);
+            border-bottom: 3px solid rgba(255,255,255,1);
+            border-radius: 3px 0 0 3px;
+
+        }
+        
+        &:last-of-type {
+            border-top: 3px solid rgba(255,255,255,1);
+            border-right: 3px solid rgba(255,255,255,1);
+            border-bottom: 3px solid rgba(255,255,255,1);
+            margin-left: 0 !important;
+            border-radius: 0px 3px 3px 0px;
+        }
+    }
+}
+
+img.intros {
+    width: 320px;
+    margin-top: 5px;
 }
