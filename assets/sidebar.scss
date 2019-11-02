@@ -31,6 +31,11 @@
         cursor: pointer;
         transition: all .125s ease-in-out;
 
+        @media screen and (max-width: 550px) {
+            color: white;
+            opacity: 1;
+        }
+
         &:hover {
             opacity: 1;
             transition: all .125s ease-in-out;
@@ -53,6 +58,12 @@
     }
 }
 
+.swiper-container-initialized.bottom {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
 .btn-next {
     position: absolute;
     right: 100px;
@@ -70,11 +81,19 @@
 #stories-tab {
     height: 320px;
     overflow: scroll;
+
+    @media screen and (max-width: 550px) {
+        height: 137px;
+    }
 }
 
 #districts-tab {
     height: 320px;
     overflow: scroll;
+    
+    @media screen and (max-width: 550px) {
+        height: 137px;
+    }
 }
 
 .sidebar {
@@ -385,4 +404,8 @@
 img.intros {
     width: 320px;
     margin-top: 5px;
+
+    @media screen and (max-width: 550px) {
+        width: 100%;
+    }
 }

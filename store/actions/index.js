@@ -34,6 +34,14 @@ import { SET_TEMPELHOF_GEOJSON } from '../constants/action-types';
 import { SET_LINIENSTR_GEOJSON } from '../constants/action-types';
 import { SET_NUM_RIDES } from '../constants/action-types';
 import { SET_MODE } from '../constants/action-types';
+import { SET_DATA_ALL_RIDES } from '../constants/action-types';
+
+export function setDataAllRides(payload) {
+    return { 
+        type: SET_DATA_ALL_RIDES, 
+        payload 
+    };
+}
 
 export function setMode(payload) {
     return { 

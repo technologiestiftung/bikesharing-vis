@@ -91,7 +91,7 @@ class LineChart extends React.Component {
             .attr('width', this.width)
             .attr('height', this.height)
 
-        if (this.props.id != 'tripsTotal') {
+        if (this.props.id != 'tripsTotal'  && window.innerWidth > 549) {
             this.svg
                 .attr('style', 'opacity: .5;')
         }
@@ -355,7 +355,7 @@ class LineChart extends React.Component {
                 d3Select(`#${this.props.id}-marker-0`).style('display', 'inherit'); 
                 d3Select(`#${this.props.id}-marker-1`).style('display', 'inherit');
                 
-                if (this.props.id != 'tripsTotal') {
+                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
                     this.svg
                         .attr('style', 'opacity: 1;')
                 }
@@ -367,7 +367,7 @@ class LineChart extends React.Component {
                 d3Select(`#${this.props.id}-marker-1`).style('display', 'none'); 
                 this.dispatchHighlightedDistrict(null);
 
-                if (this.props.id != 'tripsTotal') {
+                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
                     this.svg
                         .attr('style', 'opacity: .5;')
                 }

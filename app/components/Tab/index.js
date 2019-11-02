@@ -50,7 +50,7 @@ class Tab extends React.Component {
     storiesDivs = () => {
         let divs = stories.map((story,i) => {
             return (
-                <div className="story-outer">
+                <div className="story-outer" key={`key-${i}`}>
                     <h3>{story.title}</h3>
                     <span>{story.description}</span>
 
@@ -90,6 +90,7 @@ class Tab extends React.Component {
                         domainY={60}
                         yAxisLabel={districtName}
                         marginLeft={25}
+                        key={`key-${i}`} 
                     ></LineChart>
                 )
             }

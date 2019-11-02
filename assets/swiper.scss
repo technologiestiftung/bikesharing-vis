@@ -1,0 +1,22 @@
+.swiper-slide {
+    height: 300px;
+    width: 100vw;
+}
+
+.swiper-container {
+ 
+    .swiper-wrapper {
+        .swiper-slide {
+            display: flex;
+            justify-content: space-around;
+            height: 250px;
+
+            .sidebar {
+                background: none;
+                position: relative;
+            }
+        }
+    }
+}
+
+

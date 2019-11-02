@@ -14,10 +14,6 @@ import { json as d3Json } from 'd3';
 import svg from '../../assets/citylab-logo.svg';
 
 const TsbLinkDiv = styled.div`
-    position: absolute;
-    z-index: 1;
-    bottom: 15px;
-    left: 15px;
 
     a {
         display: flex;
@@ -33,6 +29,20 @@ const LogoImg = styled.img`
     margin-top: 10px;
     width: 150px;
     z-index: -1;
+`;
+
+const ByCityLab = styled.div`
+    postition: absolute;
+    bottom: 25px;
+    font-family: 'IBM Plex Sans';
+    color: white;
+    font-size: 14px;
+    left: 25px;
+    position: absolute;
+
+    @media screen and (max-width: 550px) {
+        top: 110px;
+    }
 `;
 
 const mapStateToProps = function(state) {
@@ -271,7 +281,7 @@ class AppContainer extends React.Component {
 
     TSBLink() {
         return <TsbLinkDiv className="link">
-            <a href="https://citylab-berlin.org">
+            <a href="https://citylab-berlin.org" target="_blank">
                 <LogoImg src={svg}></LogoImg>
             </a>
         </TsbLinkDiv>;
@@ -299,9 +309,9 @@ class AppContainer extends React.Component {
         }
 
         if (prevProps.time > 99999) {
-            console.log(prevProps.time)
             let oldIndex = this.props.selectedDatasetIndex;
-            const newIndex = this.props.selectedDatasetIndex == this.props.datasets.length ? 0 : oldIndex + 1;
+            const newIndex = this.props.selectedDatasetIndex == this.props.datasets.length - 1 ? 0 : oldIndex + 1;
+            console.log(newIndex, this.props.datasets.length);
 
             this.props.dispatch(setSelectedDatasetIndex(newIndex));
             this.props.dispatch(setSelectedDataset(this.props.datasets[this.props.selectedDatasetIndex][1]));
@@ -339,9 +349,13 @@ class AppContainer extends React.Component {
                         {/* <Analyse data=""/> */}
                         {/* <Filter/> */}
                         <LogoSvg/>
+
                         <OverlayAbout/>
                     </div>
-                    {this.TSBLink()}
+                    <ByCityLab>
+                        <span>Ein Projekt des:</span>
+                        {this.TSBLink()}
+                    </ByCityLab>
                 </div>
             </ThemeProvider>
             )

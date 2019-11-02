@@ -27,7 +27,7 @@ const initialState = {
     provider1: 0,
     mode: 'departure', // or 'arrival'
     provider2: 0,
-    overlayInfo: true,
+    overlayInfo: false,
     barCurrent: null,
     sbahnVisible: false,
     animationSpeed: 30,
@@ -43,7 +43,8 @@ const initialState = {
     mouseIsDown: false,
     tempelhofGeoJson: null,
     linienstrGeoJson: null,
-    numRides: null
+    numRides: null,
+    dataAllRides: null
 }
 
 function rootReducer(state = initialState, action) {
@@ -60,6 +61,10 @@ function rootReducer(state = initialState, action) {
 
     if (action.type === 'SET_MOUSE_DOWN') {
         return {...state, mouseIsDown: action.payload }
+    }
+
+    if (action.type === 'SET_DATA_ALL_RIDES') {
+        return {...state, dataAllRides: action.payload }
     }
 
     if (action.type === 'SET_MODE') {
