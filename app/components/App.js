@@ -345,9 +345,6 @@ class AppContainer extends React.Component {
                     <div className="app-wrapper">
                         <DeckGlWrapper/>
                         <Sidebar data={this.props.districtsData}/>
-                        {/* <ButtonInfo/> */}
-                        {/* <Analyse data=""/> */}
-                        {/* <Filter/> */}
                         <LogoSvg/>
 
                         <OverlayAbout/>

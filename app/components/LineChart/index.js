@@ -77,7 +77,9 @@ class LineChart extends React.Component {
         this.state = {
             svg: null,
             update: true,
-            currentRides: [50, 24]
+            currentRides: [50, 24],
+            lidl: null,
+            next: null
         }
 
         this.histogramDomain = null;
@@ -135,6 +137,20 @@ class LineChart extends React.Component {
         this.transformData();
     }
 
+    updateLegend = () => {
+
+        this.data.forEach((set, i) => {
+            let date = this.trailsScale(this.props.time);
+            var index = this.bisect(set, date);
+
+
+            if (set[index] != undefined) {
+                let datum = set[index].value;
+                d3Select(`#${this.props.id}-count-${i}`).text(datum);
+            }
+        })
+    }
+
     createAxis = () => {
 
         let time = (this.props.date.getTime() - 60 * 60 * 1000);
@@ -190,6 +206,22 @@ class LineChart extends React.Component {
                 marker.attr('cx', this.x(date))
                 marker.attr('cy', () => {
                     let val = this.getMarkerY(set, date);
+                    
+                    var index = this.bisect(set, date);
+                    let v = set[index];
+                    
+                    // if (i == 0) {
+                    //     this.setState({
+                    //         lidl: v
+                    //     })
+                    // } if (i == 1) {
+                    //     this.setState({
+                    //         next: v
+                    //     })
+                    // }
+
+
+
                     if (val == undefined) { val = 64.5 }
                     return val;
                 })
@@ -430,6 +462,10 @@ class LineChart extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.data !== prevProps.data) {
           this.updateChart()
+        }
+
+        if (this.props.time != prevProps.time) {
+            this.updateLegend();
         }
 
         this.updateMarker()
