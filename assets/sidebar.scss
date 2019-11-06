@@ -1,4 +1,9 @@
 
+
+html {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
 .mb-s {
     margin-bottom: 10px;
 }
@@ -19,30 +24,49 @@
 .HowTo {
     font-family: 'IBM Plex Sans';
     display: flex;
-    justify-content: space-around;
     height: 60px;
     align-items: center;
+    margin-left: 19px;
+    cursor: pointer;
+    transition: all .125s ease-in-out;
 
-    span {
-        text-align: center;
-        opacity: .3;
-        letter-spacing: .15px;
-        font-size: 13px;
-        cursor: pointer;
-        transition: all .125s ease-in-out;
+    .icon {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.5);
+        color: rgba(255,255,255,.5);
+        transition: all .125s ease;
+        border-radius: 50px;
 
-        @media screen and (max-width: 550px) {
-            color: white;
-            opacity: 1;
+        span {
+            position: absolute;
+            transform: translateX(6.5px) translateY(2px);
+            font-size: 13px;
+        }
+    }
+
+    &:hover {
+        span {
+            opacity: 1 !important;
+            transition: all .125s ease-in-out;
         }
 
-        &:hover {
-            opacity: 1;
-            transition: all .125s ease-in-out;
+        .icon {
+            background: rgba(255,255,255,.2);
+            color: rgba(255,255,255,1);
+            border-color: rgba(255,255,255,1);
+            transition: all .125s ease;
         }
     }
 }
 
+.HowTo > span {
+    opacity: .5;
+    font-size: 14px;
+    margin-left: 10px;
+    transform: translateY(-2px);
+    height: 15px;
+}
 
 .btn-prev {
     position: absolute;
@@ -80,7 +104,8 @@
 
 #stories-tab {
     height: 320px;
-    overflow: scroll;
+    overflow: auto;
+    ::-webkit-scrollbar { width: 0 !important }
 
     @media screen and (max-width: 550px) {
         height: 137px;
@@ -89,7 +114,8 @@
 
 #districts-tab {
     height: 320px;
-    overflow: scroll;
+    overflow: auto;
+    ::-webkit-scrollbar { width: 0 !important }
     
     @media screen and (max-width: 550px) {
         height: 137px;
@@ -202,6 +228,7 @@
         }
 
         .numbers-wrapper {
+            &::-webkit-scrollbar { width: 0 !important }
             overflow: auto;
             &.active {
                 display: block;

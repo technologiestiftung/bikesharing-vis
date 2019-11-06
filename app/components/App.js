@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { setDatasets,setBerlinGeoJson, setStateDeckGl, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate } from '../../store/actions/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
+import CSSTransition from 'react-transition-group/CSSTransitionGroup';
 
 import { json as d3Json } from 'd3';
 
@@ -40,8 +41,9 @@ const ByCityLab = styled.div`
     left: 25px;
     position: absolute;
 
-    @media screen and (max-width: 550px) {
+    @media screen and (max-width: 600px) {
         top: 110px;
+        display: none;
     }
 `;
 
@@ -64,7 +66,6 @@ const mapStateToProps = function(state) {
 }
 
 import '../../assets/stylesheet.scss';
-import { updateEvents } from 'react-mapbox-gl/lib/map-events';
 
 class AppContainer extends React.Component {
     
@@ -311,7 +312,6 @@ class AppContainer extends React.Component {
         if (prevProps.time > 99999) {
             let oldIndex = this.props.selectedDatasetIndex;
             const newIndex = this.props.selectedDatasetIndex == this.props.datasets.length - 1 ? 0 : oldIndex + 1;
-            console.log(newIndex, this.props.datasets.length);
 
             this.props.dispatch(setSelectedDatasetIndex(newIndex));
             this.props.dispatch(setSelectedDataset(this.props.datasets[this.props.selectedDatasetIndex][1]));
@@ -347,7 +347,9 @@ class AppContainer extends React.Component {
                         <Sidebar data={this.props.districtsData}/>
                         <LogoSvg/>
 
-                        <OverlayAbout/>
+                        <CSSTransition transitionName="example" in={true} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+                            <OverlayAbout/>
+                        </CSSTransition>
                     </div>
                     <ByCityLab>
                         <span>Ein Projekt des:</span>

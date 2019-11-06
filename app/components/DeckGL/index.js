@@ -136,7 +136,7 @@ class DeckGlWrapper extends React.Component {
 	}
 
 	editViewport(val) {
-		// console.log(val);
+		// console.log(val.viewState);
 	}
 
 	editTime(val) {

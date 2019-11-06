@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setStateDeckGl, setViewport, setTime, toggleProvider, setSbahnVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
+import { setStateDeckGl, setViewport, setSbahnVisible, setStoryId, setButtonPlay, setButtonPause, setAnimationSpeed, setButtonForward, setButtonBackward } from '../../../store/actions/index';
 import { FlyToInterpolator } from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 import styled from "styled-components";
@@ -13,7 +13,8 @@ function mapStateToProps(state) {
       transitionDuration: state.transitionDuration,
       vendor: state.vendor,
       time: state.time,
-      storyId: state.storyId
+      storyId: state.storyId,
+      districtView: state.districtView
     };
 }
 
@@ -27,10 +28,45 @@ class CameraHandle extends React.Component {
         super(props);
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.districtView != null && prevProps.districtView != null) {
+            if (this.props.districtView[0].name != prevProps.districtView[0].name) {
+                // console.log(this.props.districtView[0]);
+                this.updatePos(this.props.districtView[0]);
+            }
+        }
+    }
+
+    updatePos = (view) => {
+        const location = {
+            longitude: view.longitude,
+            latitude: view.latitude, 
+            zoom: view.zoom,
+            pitch: 45,
+            transitionDuration: 2000,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionEasing: d3EaseCubic
+        }
+
+        this.props.dispatch(setStateDeckGl(false));
+        this.props.dispatch(setViewport(location));
+        
+        setTimeout(() => {
+            this.props.dispatch(setStateDeckGl(true));
+            this.props.dispatch(setButtonPause(false));
+            this.props.dispatch(setButtonPlay(true));
+            this.props.dispatch(setButtonBackward(false));
+            this.props.dispatch(setButtonForward(false));
+        },this.props.transitionDuration)
+
+        this.props.dispatch(setSbahnVisible(false));
+        this.props.dispatch(setAnimationSpeed(20));
+    }
+
 
     moveToLocation = () => {
 
-        console.log(this.props.storyId);
+        console.log(this.props);
 
         const location = {
             longitude: this.props.lng,
@@ -42,8 +78,6 @@ class CameraHandle extends React.Component {
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: d3EaseCubic
         }
-
-        
 
         this.props.dispatch(setStateDeckGl(false));
         this.props.dispatch(setViewport(location));

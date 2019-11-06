@@ -1,6 +1,6 @@
 import Swiper from 'react-id-swiper';
 import Overview from '../Overview/index';
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import Navigation from '../Navigation/index';
 import LineChart from '../LineChart';

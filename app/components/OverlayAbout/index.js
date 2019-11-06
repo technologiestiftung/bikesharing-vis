@@ -100,10 +100,12 @@ const Intro = styled.span`
 `
 
 const ScrollWrapper = styled.div`
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
-    height: 500px;
+    height: 480px;
     padding: 10px;
+
+    &::-webkit-scrollbar { width: 0 !important }
 
     @media screen and (max-width: ${props => props.theme.screenWidthM}) {
         height: 95%;

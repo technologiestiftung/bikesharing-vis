@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import styled from "styled-components";
 
 const ButtonDiv = styled.div`
-    border: 3px solid rgba(255,255,255,.5);;
+    border: 3px solid rgba(255,255,255,.5);
     font-family: ${props => props.theme.fontFamily};
     color: rgba(255,255,255,.5);
     border-radius: 100px;

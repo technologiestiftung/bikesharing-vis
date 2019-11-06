@@ -35,6 +35,7 @@ import { SET_LINIENSTR_GEOJSON } from '../constants/action-types';
 import { SET_NUM_RIDES } from '../constants/action-types';
 import { SET_MODE } from '../constants/action-types';
 import { SET_DATA_ALL_RIDES } from '../constants/action-types';
+import { SET_VIEW_TO_DISTRICT } from '../constants/action-types';
 
 export function setDataAllRides(payload) {
     return { 
@@ -46,6 +47,13 @@ export function setDataAllRides(payload) {
 export function setMode(payload) {
     return { 
         type: SET_MODE, 
+        payload 
+    };
+}
+
+export function setViewToDistrict(payload) {
+    return { 
+        type: SET_VIEW_TO_DISTRICT, 
         payload 
     };
 }

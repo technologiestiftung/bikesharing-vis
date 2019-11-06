@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 
-import { setTime, setHighlightedDistrict, setMouseDown } from '../../../store/actions/index';
+import { setTime, setHighlightedDistrict, setMouseDown, setViewToDistrict } from '../../../store/actions/index';
 
 import { 
     select as d3Select,
@@ -92,6 +92,29 @@ class LineChart extends React.Component {
             .classed('chart', true)
             .attr('width', this.width)
             .attr('height', this.height)
+            .on('mousedown', () => { this.dispatchSetViewToDistrict(this.props.yAxisLabel) })
+            .on('mouseover', () => { 
+                this.dispatchHighlightedDistrict(this.props.yAxisLabel); 
+
+                d3Select(`#${this.props.id}-marker-0`).style('display', 'inherit'); 
+                d3Select(`#${this.props.id}-marker-1`).style('display', 'inherit');
+                
+                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
+                    this.svg
+                        .attr('style', 'opacity: 1;')
+                }
+            })
+            .on('mouseout', () => { 
+                this.dispatchHighlightedDistrict(null); 
+
+                d3Select(`#${this.props.id}-marker-0`).style('display', 'none'); 
+                d3Select(`#${this.props.id}-marker-1`).style('display', 'none'); 
+
+                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
+                    this.svg
+                        .attr('style', 'opacity: .5;')
+                }
+            })
 
         if (this.props.id != 'tripsTotal'  && window.innerWidth > 549) {
             this.svg
@@ -297,6 +320,10 @@ class LineChart extends React.Component {
         this.props.dispatch(setHighlightedDistrict(district))
     }
 
+    dispatchSetViewToDistrict = (district) => {
+        this.props.dispatch(setViewToDistrict(district))
+    }
+
     drawLine = (data, color, index) => {
 
         this.areaDefault = d3Area()
@@ -383,27 +410,6 @@ class LineChart extends React.Component {
             .style('stroke-width', '2px')
 
         this.svgVis
-            .on('mouseover', () => { 
-                d3Select(`#${this.props.id}-marker-0`).style('display', 'inherit'); 
-                d3Select(`#${this.props.id}-marker-1`).style('display', 'inherit');
-                
-                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
-                    this.svg
-                        .attr('style', 'opacity: 1;')
-                }
-
-                this.dispatchHighlightedDistrict(this.props.yAxisLabel);
-            })
-            .on('mouseout', () => { 
-                d3Select(`#${this.props.id}-marker-0`).style('display', 'none'); 
-                d3Select(`#${this.props.id}-marker-1`).style('display', 'none'); 
-                this.dispatchHighlightedDistrict(null);
-
-                if (this.props.id != 'tripsTotal' && window.innerWidth > 549) {
-                    this.svg
-                        .attr('style', 'opacity: .5;')
-                }
-            })
             .on('mousemove', (d,i,n) => {
                 let mouse = d3Mouse(d3Select(n[i]).node());
 

@@ -1,3 +1,5 @@
+import districtViews from '../../assets/districtViews';
+
 const initialState = {
     time: 0,
     animate: false,
@@ -27,13 +29,14 @@ const initialState = {
     provider1: 0,
     mode: 'departure', // or 'arrival'
     provider2: 0,
-    overlayInfo: false,
+    overlayInfo: true,
     barCurrent: null,
     sbahnVisible: false,
     animationSpeed: 30,
     berlinGeoJson: null,
     timeExtend: [],
     datasets: null,
+    districtView: null,
     selectedDataset: null,
     selectedDatasetIndex: 18,
     districtsMetadata: null,
@@ -57,6 +60,11 @@ function rootReducer(state = initialState, action) {
 
         // es6 way
         return {...state, time: action.payload}
+    }
+
+    if (action.type === 'SET_VIEW_TO_DISTRICT') {
+        const pos = districtViews.filter(dist => { return dist.name == action.payload });
+        return {...state, districtView: pos }
     }
 
     if (action.type === 'SET_MOUSE_DOWN') {
