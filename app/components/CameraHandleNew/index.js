@@ -29,9 +29,14 @@ class CameraHandle extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (prevProps.districtView == null) {
+            setTimeout(() => {
+                this.updatePos(this.props.districtView[0]);
+            },250) 
+        }
+
         if (this.props.districtView != null && prevProps.districtView != null) {
             if (this.props.districtView[0].name != prevProps.districtView[0].name) {
-                // console.log(this.props.districtView[0]);
                 this.updatePos(this.props.districtView[0]);
             }
         }

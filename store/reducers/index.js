@@ -29,7 +29,7 @@ const initialState = {
     provider1: 0,
     mode: 'departure', // or 'arrival'
     provider2: 0,
-    overlayInfo: true,
+    overlayInfo: false,
     barCurrent: null,
     sbahnVisible: false,
     animationSpeed: 30,
