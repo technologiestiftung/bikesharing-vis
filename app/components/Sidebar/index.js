@@ -36,9 +36,9 @@ class Sidebar extends React.Component {
     }
 
     updateRidesData = () => {
-        if (this.props.mode == 'departure') {
+        if (this.props.mode == 'departure' && this.props.districtsMetadata != null) {
             this.props.dispatch(setDataAllRides([this.props.districtsMetadata.arrStartLidl, this.props.districtsMetadata.arrStartNext]))
-        } else if (this.props.mode == 'arrival') {
+        } else if (this.props.mode == 'arrival' && this.props.districtsMetadata != null) {
             this.props.dispatch(setDataAllRides([this.props.districtsMetadata.arrEndLidl, this.props.districtsMetadata.arrEndNext]))
         }
     }
@@ -87,8 +87,6 @@ class Sidebar extends React.Component {
                 'mode': true,
                 'pressed': this.props.mode == 'departure',
             });
-
-            console.log(this.props)
 
             return (
                 <div className="sidebar">

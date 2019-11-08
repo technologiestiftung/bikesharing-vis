@@ -5,6 +5,7 @@ import { FlyToInterpolator } from 'react-map-gl';
 import { easeCubic as d3EaseCubic } from 'd3';
 import styled from "styled-components";
 import classNames from 'classnames';
+import {TRANSITION_EVENTS} from 'react-map-gl';
 
 function mapStateToProps(state) {
     return {
@@ -28,51 +29,8 @@ class CameraHandle extends React.Component {
         super(props);
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.districtView == null) {
-            setTimeout(() => {
-                this.updatePos(this.props.districtView[0]);
-            },250) 
-        }
-
-        if (this.props.districtView != null && prevProps.districtView != null) {
-            if (this.props.districtView[0].name != prevProps.districtView[0].name) {
-                this.updatePos(this.props.districtView[0]);
-            }
-        }
-    }
-
-    updatePos = (view) => {
-        const location = {
-            longitude: view.longitude,
-            latitude: view.latitude, 
-            zoom: view.zoom,
-            pitch: 45,
-            transitionDuration: 2000,
-            transitionInterpolator: new FlyToInterpolator(),
-            transitionEasing: d3EaseCubic
-        }
-
-        this.props.dispatch(setStateDeckGl(false));
-        this.props.dispatch(setViewport(location));
-        
-        setTimeout(() => {
-            this.props.dispatch(setStateDeckGl(true));
-            this.props.dispatch(setButtonPause(false));
-            this.props.dispatch(setButtonPlay(true));
-            this.props.dispatch(setButtonBackward(false));
-            this.props.dispatch(setButtonForward(false));
-        },this.props.transitionDuration)
-
-        this.props.dispatch(setSbahnVisible(false));
-        this.props.dispatch(setAnimationSpeed(20));
-    }
-
 
     moveToLocation = () => {
-
-        console.log(this.props);
-
         const location = {
             longitude: this.props.lng,
             latitude: this.props.lat, 
@@ -81,23 +39,12 @@ class CameraHandle extends React.Component {
             bearing: this.props.bearing,
             transitionDuration: this.props.transitionDuration,
             transitionInterpolator: new FlyToInterpolator(),
-            transitionEasing: d3EaseCubic
+            transitionEasing: d3EaseCubic,
+            onTransitionEnd: () => { this.props.dispatch(setStateDeckGl(true)); },
         }
-
         this.props.dispatch(setStateDeckGl(false));
         this.props.dispatch(setViewport(location));
         this.props.dispatch(setStoryId(this.props.newStoryId));
-        
-        setTimeout(() => {
-            this.props.dispatch(setStateDeckGl(true));
-            this.props.dispatch(setButtonPause(false));
-            this.props.dispatch(setButtonPlay(true));
-            this.props.dispatch(setButtonBackward(false));
-            this.props.dispatch(setButtonForward(false));
-        },this.props.transitionDuration)
-
-        this.props.dispatch(setSbahnVisible(false));
-        this.props.dispatch(setAnimationSpeed(20));
     }
 
     render() {
@@ -113,7 +60,6 @@ class CameraHandle extends React.Component {
             });
         }
 
-        
         return (
             <span className={`${btnClass} ${this.props.classNaming}`} onClick={this.moveToLocation}>{this.props.label}</span>
         );

@@ -4,13 +4,18 @@ import DeckGlWrapper from './DeckGL/index';
 import Sidebar from './Sidebar/index';
 import LogoSvg from './Logo/index';
 import OverlayAbout from './OverlayAbout/index';
+import { FlyToInterpolator } from 'react-map-gl';
 import { connect } from "react-redux";
-import { setDatasets,setBerlinGeoJson, setStateDeckGl, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate } from '../../store/actions/index';
+import { setDatasets,setBerlinGeoJson, setStateDeckGl, setNumRides, setTempelhofGeoJson, setLinienstrGeoJson, setBerlinDistrictsGeoJson, setSelectedDatasetIndex, setDistrictsMetadata, setDistrictsData, setSelectedDataset, setLoaded, setData, setProvider0, setProvider1, setTimeExtend, toggleUpdate, setViewport, setAnimationSpeed } from '../../store/actions/index';
 import theme from '../../assets/theme';
 import MetaTags from 'react-meta-tags';
 import CSSTransition from 'react-transition-group/CSSTransitionGroup';
+import {TRANSITION_EVENTS} from 'react-map-gl';
 
-import { json as d3Json } from 'd3';
+import { 
+    json as d3Json,
+    easeCubic as d3EaseCubic
+} from 'd3';
 
 import svg from '../../assets/citylab-logo.svg';
 
@@ -62,6 +67,7 @@ const mapStateToProps = function(state) {
       selectedDataset: state.selectedDataset,
       selectedDatasetIndex: state.selectedDatasetIndex,
       districtsData: state.districtsData,
+      districtView: state.districtView,
     }
 }
 
@@ -95,6 +101,24 @@ class AppContainer extends React.Component {
 
                 this.loadDataset(vendorId);
             })
+    }
+
+    updatePos = (view) => {
+        view = view[0];
+
+        const location = {
+            longitude: view.longitude,
+            latitude: view.latitude, 
+            zoom: view.zoom,
+            pitch: 45,
+            transitionDuration: 2000,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionEasing: d3EaseCubic,
+            onTransitionEnd: () => { this.props.dispatch(setStateDeckGl(true)); }
+        }
+        this.props.dispatch(setStateDeckGl(false));
+        this.props.dispatch(setViewport(location));
+
     }
 
     loadDataset = (vendorId) => {
@@ -300,6 +324,12 @@ class AppContainer extends React.Component {
     }
     
     componentDidUpdate(prevProps) {
+
+        if (prevProps.districtView != this.props.districtView) {
+            if (this.props.districtView.length != 0) {
+                this.updatePos(this.props.districtView);
+            }
+        }
         
         if (this.props.update == true) {
             this.loadDataset(this.props.vendor);
@@ -346,10 +376,7 @@ class AppContainer extends React.Component {
                         <DeckGlWrapper/>
                         <Sidebar data={this.props.districtsData}/>
                         <LogoSvg/>
-
-                        <CSSTransition transitionName="example" in={true} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-                            <OverlayAbout/>
-                        </CSSTransition>
+                        <OverlayAbout/>
                     </div>
                     <ByCityLab>
                         <span>Ein Projekt des:</span>

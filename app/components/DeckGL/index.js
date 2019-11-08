@@ -9,7 +9,7 @@ import { TripsLayer } from '@deck.gl/geo-layers';
 import { config } from '../../../config.js';
 
 import { connect } from "react-redux";
-import { setTime, setTimeOffset } from '../../../store/actions/index';
+import { setTime, setTimeOffset, setStateDeckGl } from '../../../store/actions/index';
 
 function mapStateToProps(state) {
   return {
