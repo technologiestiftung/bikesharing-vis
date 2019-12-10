@@ -1,5 +1,5 @@
 <div align="center">
-   <img width="150" heigth="150" src="https://webpack.js.org/assets/icon-square-big.svg" />
+   <img width="150" heigth="150" src="https://github.com/technologiestiftung/bikesharing-vis/blob/master/assets/citylab-logo_.svg" />
 </div>
 
 ## Example: Use deck.gl with react-map-gl and Webpack
