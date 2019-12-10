@@ -1,15 +1,19 @@
 <div align="center">
-   <img width="150" heigth="150" src="https://github.com/technologiestiftung/bikesharing-vis/blob/master/assets/citylab-logo_.svg" />
+   <a href="https://citylab-berlin.org"><img width="50" heigth="50" src="https://raw.githubusercontent.com/technologiestiftung/bikesharing-vis/master/assets/citylab-shape.png" /></a>
 </div>
 
-## Example: Use deck.gl with react-map-gl and Webpack
+# CityLAB Berlin: Bikesharing Visualization
 
-Uses [Webpack](https://github.com/webpack/webpack) to bundle files and serves it
+> The visualization is developed by the CityLAB Berlin and shows the use of bikesharing providers (LIDL-Bike, NextBike) in Berlin . All wheel movements larger than 300 meters are shown. Thus it becomes visible at which times and in which regions bikesharing is used particularly intensively.
+
+> A version of the working prototype can be found [here](https://bikesharing.citylab-berlin.org/)
+
+This project uses [Webpack](https://github.com/webpack/webpack) to bundle files and serves it
 with [webpack-dev-server](https://webpack.js.org/guides/development/#webpack-dev-server).
 
 ## Usage
 
-To run this example, you need a [Mapbox access token](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/). You can either set an environment variable:
+To run this project, you need a [Mapbox access token](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/). You can either set an environment variable:
 
 ```bash
 export MapboxAccessToken=<mapbox_access_token>
@@ -23,10 +27,8 @@ To install dependencies:
 
 ```bash
 npm install
-# or
-yarn
 ```
 
-Commands:
+#### Commands:
 * `npm start` is the development target, to serves the app and hot reload.
 * `npm run build` is the production target, to create the final bundle and write to disk.
