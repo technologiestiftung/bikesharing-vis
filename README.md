@@ -32,3 +32,12 @@ npm install
 #### Commands:
 * `npm start` is the development target, to serves the app and hot reload.
 * `npm run build` is the production target, to create the final bundle and write to disk.
+
+
+## Documentation
+
+> a more extensive documentation is following soon ...
+
+## License
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
