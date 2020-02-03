@@ -19,6 +19,8 @@ import {
 
 import svg from '../../assets/citylab-logo.svg';
 
+import LogoTSBSvg from '../components/LogoTSB/';
+
 const TsbLinkDiv = styled.div`
 
     a {
@@ -39,7 +41,7 @@ const LogoImg = styled.img`
 
 const ByCityLab = styled.div`
     postition: absolute;
-    bottom: 25px;
+    bottom: 120px;
     font-family: 'IBM Plex Sans';
     color: white;
     font-size: 14px;
@@ -379,9 +381,10 @@ class AppContainer extends React.Component {
                         <OverlayAbout/>
                     </div>
                     <ByCityLab>
-                        <span>Ein Projekt des:</span>
+                        <span>Ein Projekt von</span>
                         {this.TSBLink()}
                     </ByCityLab>
+                    <LogoTSBSvg/>
                 </div>
             </ThemeProvider>
             )
